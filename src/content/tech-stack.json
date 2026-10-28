@@ -1,0 +1,5 @@
+[
+  { "id": "todo-tech-1", "name": "TODO: tecnología 1", "category": "TODO: categoría", "order": 1 },
+  { "id": "todo-tech-2", "name": "TODO: tecnología 2", "category": "TODO: categoría", "order": 2 },
+  { "id": "todo-tech-3", "name": "TODO: tecnología 3", "category": "TODO: categoría", "order": 3 }
+]

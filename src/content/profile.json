@@ -1,0 +1,15 @@
+{
+  "main": {
+    "name": "Angelo Torella",
+    "title": "Desarrollador de Software",
+    "tagline": "Desarrollo de software a medida. TODO: escribir una frase que resuma tu propuesta de valor.",
+    "bio": "Desarrollador de software. Además, cuento con 9 años de experiencia en asistencia informática contable. TODO: ampliar esta biografía con tu enfoque, tecnologías y el tipo de proyectos que buscas.",
+    "email": "TODO@angelotorella.com",
+    "linkedin": "",
+    "github": "",
+    "twitter": "",
+    "calendarUrl": "",
+    "education": ["TODO: título o formación — institución (año)"],
+    "languages": [{ "name": "TODO: idioma", "level": "TODO: nivel" }]
+  }
+}

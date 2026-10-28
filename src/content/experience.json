@@ -1,0 +1,25 @@
+[
+  {
+    "id": "software-development",
+    "company": "TODO: empresa o «Freelance»",
+    "role": "Desarrollador de Software",
+    "startDate": "TODO: AAAA-MM",
+    "type": "full-time",
+    "description": "TODO: describe tu trabajo actual como desarrollador de software.",
+    "highlights": ["TODO: logro o responsabilidad destacada"],
+    "stack": ["TODO: tecnología"],
+    "order": 1
+  },
+  {
+    "id": "accounting-it-support",
+    "company": "TODO: empresa",
+    "role": "Asistencia informática contable",
+    "startDate": "TODO: AAAA-MM",
+    "endDate": "TODO: AAAA-MM",
+    "type": "full-time",
+    "description": "9 años de experiencia en asistencia informática contable. TODO: detallar funciones y herramientas.",
+    "highlights": ["TODO: logro o responsabilidad destacada"],
+    "stack": [],
+    "order": 2
+  }
+]

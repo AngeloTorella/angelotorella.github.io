@@ -1,0 +1,45 @@
+---
+import { getProfile, getServices } from '@lib/content';
+const [{ name, title, email, linkedin, github, twitter, location }, services] = await Promise.all([
+  getProfile(),
+  getServices(),
+]);
+const hasSocials = Boolean(linkedin || github || twitter);
+---
+<footer class="border-t border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-950">
+  <div class="container mx-auto px-4 py-12 md:px-6">
+    <div class="grid gap-8 md:grid-cols-3">
+      <div>
+        <h3 class="mb-4 font-semibold text-gray-900 dark:text-white">{name}</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">{title}</p>
+        <div class="flex flex-wrap gap-4 text-sm">
+          {location && <span class="text-gray-600 dark:text-gray-400">📍 {location}</span>}
+          {email && <a href={`mailto:${email}`} class="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400">✉️ {email}</a>}
+        </div>
+      </div>
+      <div>
+        <h4 class="mb-3 font-medium text-gray-900 dark:text-white">Conectar</h4>
+        <div class="flex flex-wrap gap-3 text-sm">
+          {linkedin && <a href={linkedin} target="_blank" rel="noopener" class="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400">LinkedIn</a>}
+          {github && <a href={github} target="_blank" rel="noopener" class="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400">GitHub</a>}
+          {twitter && <a href={twitter} target="_blank" rel="noopener" class="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400">Twitter / X</a>}
+          {!hasSocials && <a href="/contacto" class="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400">Contacto</a>}
+        </div>
+      </div>
+      <div>
+        <h4 class="mb-3 font-medium text-gray-900 dark:text-white">Servicios</h4>
+        <nav aria-label="Servicios">
+          <ul class="space-y-2 text-sm">
+            {services.map(service => (
+              <li><a href={`/services/${service.id}`} class="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400">{service.data.title}</a></li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </div>
+    <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-800 text-center text-sm text-gray-500 dark:text-gray-400">
+      <p>© {new Date().getFullYear()} {name}. Todos los derechos reservados.</p>
+      <p class="mt-1">Sitio estático construido con Astro + Tailwind CSS · Alojado en GitHub Pages</p>
+    </div>
+  </div>
+</footer>

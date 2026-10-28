@@ -1,0 +1,92 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Section from '@components/ui/Section.astro';
+import CaseStudiesAccordion from '@components/case-studies/CaseStudiesAccordion.astro';
+import { getProfile, getServices, getServiceTech, getCaseStudies } from '@lib/content';
+
+export const getStaticPaths = (async () => {
+  const services = await getServices();
+  return services.map(service => ({ params: { slug: service.id }, props: { service } }));
+}) satisfies GetStaticPaths;
+
+const { service } = Astro.props;
+const [{ name }, techStack, caseStudies, { Content }] = await Promise.all([
+  getProfile(),
+  getServiceTech(service),
+  getCaseStudies(service.id),
+  render(service),
+]);
+const { title, tagline, ctaText, priceLabel } = service.data;
+const check = 'M5 13l4 4L19 7';
+---
+<BaseLayout title={`${title} — ${name}`} description={tagline}>
+  <Section class="pt-12 pb-8" padded={false}>
+    <div class="container mx-auto px-4 md:px-6">
+      <header class="mb-12 max-w-3xl">
+        <p class="mb-2 text-sm font-medium text-primary-600 dark:text-primary-400">Servicio</p>
+        <h1 class="mb-4 text-3xl font-bold tracking-tight text-gray-900 dark:text-white md:text-4xl">{title}</h1>
+        <p class="text-xl text-gray-600 dark:text-gray-300">{tagline}</p>
+        {priceLabel && <p class="mt-4 text-sm font-medium text-gray-500 dark:text-gray-400">{priceLabel}</p>}
+      </header>
+    </div>
+  </Section>
+
+  <Section class="pb-12">
+    <div class="container mx-auto px-4 md:px-6">
+      <div class="grid gap-8 lg:grid-cols-3">
+        <div class="lg:col-span-2 space-y-8">
+          <article class="max-w-none text-gray-700 dark:text-gray-300 [&_a]:text-primary-600 [&_a]:underline dark:[&_a]:text-primary-400 [&_h2]:mb-3 [&_h2]:mt-8 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-gray-900 dark:[&_h2]:text-white [&_li]:mb-1 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_p]:mb-4 [&_strong]:font-semibold [&_strong]:text-gray-900 dark:[&_strong]:text-white [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:pl-6">
+            <Content />
+          </article>
+
+          {techStack.length > 0 && (
+            <section>
+              <h2 class="mb-4 text-2xl font-bold text-gray-900 dark:text-white">Stack técnico</h2>
+              <div class="flex flex-wrap gap-2">
+                {techStack.map(tech => (
+                  <span class="inline-flex items-center gap-1.5 rounded-full bg-primary-50 px-3 py-1 text-sm font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300">
+                    <span class="h-2 w-2 rounded-full" style={`background-color: ${tech.data.color || '#0ea5e9'}`} />
+                    {tech.data.name}
+                  </span>
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+
+        <aside class="space-y-6">
+          <div class="rounded-xl border border-gray-200 bg-gray-50 p-6 dark:border-gray-700 dark:bg-gray-900">
+            <h3 class="mb-4 font-semibold text-gray-900 dark:text-white">Próximos pasos</h3>
+            <p class="mb-6 text-sm text-gray-600 dark:text-gray-400">
+              1. Agendamos una llamada sin compromiso<br />
+              2. Entiendo tu contexto y objetivos<br />
+              3. Te envío una propuesta con alcance, plazos y precio<br />
+              4. Si encaja, arrancamos
+            </p>
+            <a href={`/contacto?service=${service.id}`} class="block rounded-lg bg-primary-600 px-6 py-3 text-center text-base font-semibold text-white transition-colors hover:bg-primary-700">
+              {ctaText}
+            </a>
+          </div>
+
+          <div class="rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-900">
+            <h3 class="mb-4 font-semibold text-gray-900 dark:text-white">¿Qué incluye?</h3>
+            <ul class="space-y-3">
+              {['Entregables definidos por escrito', 'Código y documentación versionados en tu repositorio', 'Transferencia de conocimiento (sesión + documentación)', 'Sin dependencia de proveedor: todo es tuyo'].map(item => (
+                <li class="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300">
+                  <svg class="h-5 w-5 text-primary-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={check} /></svg>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </Section>
+
+  {caseStudies.length > 0 && (
+    <CaseStudiesAccordion caseStudies={caseStudies} title="Casos de éxito" />
+  )}
+</BaseLayout>
