@@ -1,0 +1,56 @@
+---
+// Schema.org JSON-LD describing the person and the services offered, for search and AI engines.
+import { getProfile, getServices } from '@lib/content';
+
+const [profile, services] = await Promise.all([getProfile(), getServices()]);
+const site = Astro.site?.toString() ?? '/';
+const [city, country] = (profile.location ?? '').split(',').map((part) => part.trim());
+const sameAs = [profile.linkedin, profile.github].filter(Boolean);
+
+const person = {
+  '@type': 'Person',
+  '@id': `${site}#person`,
+  name: profile.name,
+  jobTitle: profile.title,
+  email: `mailto:${profile.email}`,
+  url: site,
+  image: new URL('/icon-512.png', site).toString(),
+  sameAs,
+  ...(city && {
+    address: { '@type': 'PostalAddress', addressLocality: city, addressCountry: country ?? city },
+  }),
+};
+
+const business = {
+  '@type': 'ProfessionalService',
+  '@id': `${site}#business`,
+  name: `${profile.name} | Desarrollo de software`,
+  description: profile.tagline,
+  url: site,
+  email: profile.email,
+  image: new URL('/og-image.png', site).toString(),
+  founder: { '@id': `${site}#person` },
+  ...(city && { address: person.address }),
+  areaServed: [
+    ...(city ? [{ '@type': 'City', name: city }] : []),
+    ...(country ? [{ '@type': 'Country', name: country }] : []),
+    'Remoto',
+  ],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Servicios',
+    itemListElement: services.map(({ id, data }) => ({
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Service',
+        name: data.title,
+        description: data.tagline,
+        url: new URL(`/services/${id}/`, site).toString(),
+      },
+    })),
+  },
+};
+
+const jsonLd = JSON.stringify({ '@context': 'https://schema.org', '@graph': [person, business] });
+---
+<script type="application/ld+json" set:html={jsonLd} />

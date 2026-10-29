@@ -6,11 +6,13 @@ import Process from '@components/home/Process.astro';
 import ServiceGrid from '@components/services/ServiceGrid.astro';
 import CaseStudiesAccordion from '@components/case-studies/CaseStudiesAccordion.astro';
 import CTASection from '@components/layout/CTASection.astro';
+import StructuredData from '@components/seo/StructuredData.astro';
 import { getProfile, getCaseStudies } from '@lib/content';
 
 const [{ name, title, tagline }, caseStudies] = await Promise.all([getProfile(), getCaseStudies()]);
 ---
 <BaseLayout title={`${name} | Desarrollo de software a medida`} description={tagline}>
+  <StructuredData slot="head" />
   <Hero />
   <ServiceGrid />
   <WhyMe />

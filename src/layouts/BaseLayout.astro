@@ -24,16 +24,23 @@ const fontsHref =
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#faf8f3" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0f1514" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:site_name" content="Angelo Torella" />
     {socialImage && <meta property="og:image" content={socialImage} />}
+    {socialImage && <meta property="og:image:width" content="1200" />}
+    {socialImage && <meta property="og:image:height" content="630" />}
+    {socialImage && <meta property="og:image:alt" content="Angelo Torella, Desarrollador de Software" />}
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="es_ES" />
+    <meta property="og:locale" content="es_VE" />
     <meta name="twitter:card" content={socialImage ? 'summary_large_image' : 'summary'} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
@@ -43,6 +50,7 @@ const fontsHref =
     <link rel="preload" as="style" href={fontsHref} />
     <link rel="stylesheet" href={fontsHref} media="print" onload="this.media='all'" />
     <noscript><link rel="stylesheet" href={fontsHref} /></noscript>
+    <slot name="head" />
   </head>
   <body class="min-h-screen bg-paper font-sans text-ink antialiased">
     <a
@@ -54,5 +62,14 @@ const fontsHref =
     <Header />
     <main id="main-content"><slot /></main>
     <Footer />
+    <script is:inline>
+      // Swap the tab title while the visitor is on another tab.
+      (() => {
+        const original = document.title;
+        document.addEventListener('visibilitychange', () => {
+          document.title = document.hidden ? 'Tu software te espera' : original;
+        });
+      })();
+    </script>
   </body>
 </html>
