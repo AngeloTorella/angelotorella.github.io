@@ -1,17 +1,7 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
-import Section from '@components/ui/Section.astro';
-import Button from '@components/ui/Button.astro';
 import CTASection from '@components/layout/CTASection.astro';
-import {
-  getProfile,
-  getExperienceForCv,
-  getTechStackByCategory,
-  publicFileExists,
-  formatMonth,
-} from '@lib/content';
-
-const CV_PDF_PATH = '/cv/angelo-torella-cv.pdf';
+import { getProfile, getExperienceForCv, getTechStackByCategory, formatMonth } from '@lib/content';
 
 const [profile, experience, skillGroups] = await Promise.all([
   getProfile(),
@@ -19,15 +9,6 @@ const [profile, experience, skillGroups] = await Promise.all([
   getTechStackByCategory(),
 ]);
 const { name, title, bio, email, linkedin, github, location, education, languages, certifications } = profile;
-// The download link only renders when the PDF has been placed in /public.
-const hasPdf = publicFileExists(CV_PDF_PATH);
-
-const typeLabels: Record<string, string> = {
-  'full-time': 'Jornada completa',
-  contract: 'Contrato',
-  freelance: 'Freelance',
-  'side-project': 'Proyecto personal',
-};
 
 /** Human-readable span for an entry; empty when nothing is known. */
 function period(exp: { startDate?: string; endDate?: string; duration?: string }) {
@@ -35,127 +16,253 @@ function period(exp: { startDate?: string; endDate?: string; duration?: string }
   return exp.duration ?? '';
 }
 
-const h2 = 'font-display text-2xl font-semibold tracking-tight';
+/** Splits "Institution — Program" so the institution can lead the entry. */
+function splitEducation(item: string) {
+  const [org, ...rest] = item.split(' — ');
+  return { org, detail: rest.join(' — ') };
+}
 ---
 <BaseLayout title={`CV | ${name}`} description={`Trayectoria profesional de ${name}, ${title}.`}>
-  <Section class="pb-8 md:pb-12" labelledby="cv-title">
-    <header class="max-w-3xl">
-      <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-accent">Currículum</p>
-      <h1 id="cv-title" class="font-display text-4xl font-semibold leading-tight tracking-tight md:text-5xl">{name}</h1>
-      <p class="mt-2 text-xl text-brand">{title}</p>
-      <div class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-muted">
-        {location && <span>{location}</span>}
-        <a href={`mailto:${email}`} class="underline underline-offset-4 hover:text-brand">{email}</a>
-        {linkedin && <a href={linkedin} target="_blank" rel="noopener noreferrer" class="underline underline-offset-4 hover:text-brand">LinkedIn</a>}
-        {github && <a href={github} target="_blank" rel="noopener noreferrer" class="underline underline-offset-4 hover:text-brand">GitHub</a>}
-      </div>
-      {hasPdf && (
-        <Button href={CV_PDF_PATH} size="lg" class="mt-8">
-          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-          Descargar CV (PDF)
-        </Button>
-      )}
-    </header>
+  <div class="cv-wrap mx-auto max-w-[760px] px-4 pb-16 pt-10 sm:px-6">
+    <div class="no-print mb-4 flex justify-end">
+      <button
+        type="button"
+        id="cv-print"
+        class="rounded-lg border border-line bg-surface px-4 py-2 text-sm font-medium text-ink transition-colors hover:border-brand hover:text-brand"
+      >
+        Imprimir
+      </button>
+    </div>
 
-    <div class="mt-14 max-w-3xl space-y-14">
+    <article class="cv-sheet" aria-label={`Currículum de ${name}`}>
+      <header class="cv-header">
+        <h1 class="cv-name">{name}</h1>
+        <p class="cv-contact">
+          {[
+            location && <span>{location}</span>,
+            <a href={`mailto:${email}`}>{email}</a>,
+            linkedin && <a href={linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>,
+            github && <a href={github} target="_blank" rel="noopener noreferrer">GitHub</a>,
+          ].filter(Boolean).map((node, i) => (
+            <>{i > 0 && <span class="cv-sep" aria-hidden="true"> · </span>}{node}</>
+          ))}
+        </p>
+      </header>
+
       {bio && (
-        <section aria-labelledby="cv-resumen">
-          <h2 id="cv-resumen" class={h2}>Resumen</h2>
-          <p class="mt-4 text-lg leading-relaxed text-muted">{bio}</p>
+        <section class="cv-section" aria-labelledby="cv-perfil">
+          <h2 id="cv-perfil">Perfil</h2>
+          <p class="cv-text">{bio}</p>
         </section>
       )}
 
       {experience.length > 0 && (
-        <section aria-labelledby="cv-exp">
-          <h2 id="cv-exp" class={h2}>Experiencia</h2>
-          <div class="mt-6 space-y-8">
-            {experience.map(({ data: exp }) => {
-              const when = period(exp);
-              const meta = [exp.company, exp.location, typeLabels[exp.type]].filter(Boolean).join(' · ');
-              return (
-                <article class="border-l-2 border-brand pl-6">
-                  <div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
-                    <h3 class="text-xl font-semibold">{exp.role}</h3>
-                    {when && <p class="text-sm font-medium text-brand sm:whitespace-nowrap">{when}</p>}
+        <section class="cv-section" aria-labelledby="cv-exp">
+          <h2 id="cv-exp">Experiencia</h2>
+          {experience.map(({ data: exp }) => {
+            const when = period(exp);
+            return (
+              <div class="cv-entry">
+                <div class="cv-row">
+                  <strong>{exp.company ?? exp.role}</strong>
+                  {when && <span>{when}</span>}
+                </div>
+                {(exp.company || exp.location) && (
+                  <div class="cv-row">
+                    <em>{exp.company ? exp.role : ''}</em>
+                    {exp.location && <span>{exp.location}</span>}
                   </div>
-                  {meta && <p class="mt-1 text-sm text-muted">{meta}</p>}
-                  {exp.description && <p class="mt-3 text-muted">{exp.description}</p>}
-                  {exp.highlights.length > 0 && (
-                    <ul class="mt-3 list-disc space-y-1.5 pl-5 text-muted">
-                      {exp.highlights.map(h => <li>{h}</li>)}
-                    </ul>
-                  )}
-                  {exp.stack.length > 0 && (
-                    <div class="mt-3 flex flex-wrap gap-2">
-                      {exp.stack.map(tech => (
-                        <span class="rounded-full bg-brand-soft px-2.5 py-0.5 text-xs font-medium text-brand">{tech}</span>
-                      ))}
-                    </div>
-                  )}
-                </article>
-              );
-            })}
-          </div>
+                )}
+                {exp.description && <p class="cv-text">{exp.description}</p>}
+                {exp.highlights.length > 0 && (
+                  <ul class="cv-bullets">{exp.highlights.map(h => <li>{h}</li>)}</ul>
+                )}
+              </div>
+            );
+          })}
         </section>
       )}
 
-      {skillGroups.length > 0 && (
-        <section aria-labelledby="cv-skills">
-          <h2 id="cv-skills" class={h2}>Competencias técnicas</h2>
-          <div class="mt-6 grid gap-4 sm:grid-cols-2">
-            {skillGroups.map(group => (
-              <div class="rounded-2xl border border-line bg-surface p-5 shadow-card">
-                <h3 class="mb-3 font-semibold">{group.category}</h3>
-                <div class="flex flex-wrap gap-2">
-                  {group.skills.map(s => (
-                    <span class="rounded-full bg-brand-soft px-2.5 py-0.5 text-xs font-medium text-brand">{s}</span>
-                  ))}
-                </div>
+      {education.length > 0 && (
+        <section class="cv-section" aria-labelledby="cv-edu">
+          <h2 id="cv-edu">Formación</h2>
+          {education.map(item => {
+            const { org, detail } = splitEducation(item);
+            return (
+              <div class="cv-entry">
+                <div class="cv-row"><strong>{org}</strong></div>
+                {detail && <div class="cv-row"><em>{detail}</em></div>}
               </div>
-            ))}
-          </div>
+            );
+          })}
         </section>
       )}
 
       {certifications.length > 0 && (
-        <section aria-labelledby="cv-certs">
-          <h2 id="cv-certs" class={h2}>Certificaciones</h2>
-          <ul class="mt-6 space-y-2 text-muted">
+        <section class="cv-section" aria-labelledby="cv-certs">
+          <h2 id="cv-certs">Certificaciones</h2>
+          <ul class="cv-certs">
             {certifications.map(c => (
               <li>
-                <span class="font-medium text-ink">{c.name}</span>
-                {[c.issuer, c.year].filter(Boolean).length > 0 && <span> · {[c.issuer, c.year].filter(Boolean).join(', ')}</span>}
+                <span>
+                  <strong>{c.name}</strong>
+                  {c.issuer && <> — {c.issuer}</>}
+                </span>
+                {c.year && <span class="cv-year">{c.year}</span>}
               </li>
             ))}
           </ul>
         </section>
       )}
 
-      {(education.length > 0 || languages.length > 0) && (
-        <section aria-labelledby="cv-edu">
-          <h2 id="cv-edu" class={h2}>Formación e idiomas</h2>
-          <div class="mt-6 grid gap-8 sm:grid-cols-2">
-            {education.length > 0 && (
-              <div>
-                <h3 class="mb-3 font-semibold">Formación</h3>
-                <ul class="space-y-2 text-muted">{education.map(item => <li>{item}</li>)}</ul>
-              </div>
-            )}
-            {languages.length > 0 && (
-              <div>
-                <h3 class="mb-3 font-semibold">Idiomas</h3>
-                <ul class="space-y-2 text-muted">
-                  {languages.map(lang => (
-                    <li class="flex justify-between gap-4"><span>{lang.name}</span><span class="font-medium text-brand">{lang.level}</span></li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
+      {skillGroups.length > 0 && (
+        <section class="cv-section" aria-labelledby="cv-skills">
+          <h2 id="cv-skills">Habilidades</h2>
+          {skillGroups.map(group => (
+            <p class="cv-text"><strong>{group.category}:</strong> {group.skills.join(', ')}</p>
+          ))}
         </section>
       )}
-    </div>
-  </Section>
 
-  <CTASection />
+      {languages.length > 0 && (
+        <section class="cv-section" aria-labelledby="cv-lang">
+          <h2 id="cv-lang">Idiomas</h2>
+          <p class="cv-text">{languages.map(l => `${l.name} (${l.level})`).join(' · ')}</p>
+        </section>
+      )}
+    </article>
+  </div>
+
+  <div class="no-print"><CTASection /></div>
 </BaseLayout>
+
+<script>
+  document.getElementById('cv-print')?.addEventListener('click', () => window.print());
+</script>
+
+<style is:global>
+  /* The sheet is a document: it stays light and dark-ink in every color scheme. */
+  .cv-sheet {
+    background: #fff;
+    color: #111;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    padding: 2.5rem 1.5rem;
+    border: 1px solid rgb(var(--line));
+    border-radius: 4px;
+    box-shadow: 0 8px 30px rgb(0 0 0 / 0.08);
+  }
+  @media (min-width: 640px) {
+    .cv-sheet {
+      padding: 3rem 3.25rem;
+    }
+  }
+  .cv-sheet a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .cv-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .cv-name {
+    font-size: 1.9rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1.15;
+  }
+  .cv-contact {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+  }
+  .cv-section {
+    margin-top: 1.25rem;
+  }
+  .cv-section h2 {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    border-bottom: 1px solid #111;
+    padding-bottom: 0.2rem;
+    margin-bottom: 0.6rem;
+  }
+  .cv-entry {
+    margin-bottom: 0.7rem;
+    break-inside: avoid;
+  }
+  .cv-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .cv-row > span {
+    white-space: nowrap;
+  }
+  .cv-text {
+    margin-top: 0.2rem;
+  }
+  .cv-bullets {
+    list-style: disc;
+    padding-left: 1.25rem;
+    margin-top: 0.25rem;
+  }
+  .cv-certs {
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 2rem;
+    row-gap: 0.35rem;
+    font-size: 0.875rem;
+  }
+  @media (min-width: 640px) {
+    .cv-certs {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .cv-certs li {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    break-inside: avoid;
+  }
+  .cv-year {
+    white-space: nowrap;
+  }
+
+  @media print {
+    @page {
+      margin: 15mm;
+    }
+    body > :not(main),
+    .no-print {
+      display: none !important;
+    }
+    html,
+    body {
+      background: #fff !important;
+    }
+    .cv-wrap {
+      max-width: none;
+      padding: 0;
+    }
+    .cv-sheet {
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      padding: 0;
+      color: #000;
+      font-size: 10.5pt;
+    }
+    .cv-section h2,
+    .cv-entry {
+      break-inside: avoid;
+    }
+    .cv-section h2 {
+      break-after: avoid;
+    }
+  }
+</style>

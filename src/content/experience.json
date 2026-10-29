@@ -1,20 +1,24 @@
 [
   {
-    "id": "software-development",
+    "id": "smartclimbs",
+    "company": "Consultoría de negocios SmartClimbs",
     "role": "Desarrollador de Software",
+    "startDate": "2024",
+    "endDate": "2026",
     "type": "full-time",
-    "isVisibleInCv": false,
+    "isVisibleInCv": true,
     "order": 1,
-    "_todo": "Hidden until the owner provides company/«Freelance», start date, description, highlights and stack. Then set isVisibleInCv to true."
+    "_verify": "Owner to confirm role title, type and whether the end date is 2026 or ongoing."
   },
   {
     "id": "accounting-it-support",
+    "company": "Sistaccount",
     "role": "Asistencia informática para áreas contables",
     "startDate": "2019",
+    "endDate": "2025",
     "type": "full-time",
-    "description": "Asistencia informática a equipos contables: resolución de incidencias, apoyo en el uso de herramientas y acompañamiento técnico.",
     "isVisibleInCv": true,
     "order": 2,
-    "_todo": "Optional: add company, exact start/end dates (YYYY-MM), highlights and stack. Currently shown as 2019 – Actualidad."
+    "_verify": "Owner to confirm start and end years."
   }
 ]

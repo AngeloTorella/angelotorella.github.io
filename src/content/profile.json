@@ -4,15 +4,26 @@
     "title": "Desarrollador de Software",
     "headline": "Software a medida para tu negocio o práctica profesional.",
     "tagline": "Diseño y desarrollo aplicaciones web, automatizaciones y sistemas que encajan con la forma real de trabajar de tu equipo, con comunicación directa y entregas claras.",
-    "bio": "Soy desarrollador de software y trabajo de forma directa con cada cliente: hablas conmigo, sin intermediarios. Además, tengo experiencia en asistencia informática para áreas contables desde 2019, lo que me ayuda a entender cómo funcionan los equipos de trabajo por dentro y a construir herramientas que de verdad se usan.",
+    "bio": "Soy desarrollador de software y trabajo de forma directa con cada cliente: hablas conmigo, sin intermediarios. Además, entre 2019 y 2025 brindé asistencia informática a áreas contables, lo que me ayuda a entender cómo funcionan los equipos de trabajo por dentro y a construir herramientas que de verdad se usan.",
     "email": "artorella.20@proton.me",
-    "linkedin": "",
+    "location": "Caracas, Venezuela",
+    "linkedin": "https://www.linkedin.com/in/angelo-torella-7266b62a0/",
     "github": "https://github.com/AngeloTorella",
     "twitter": "",
     "calendarUrl": "",
-    "education": [],
+    "education": ["Universidad Católica Andrés Bello — Ingeniería de Software (en curso)"],
     "languages": [],
-    "certifications": [],
-    "_todo": "Owner to provide: location, LinkedIn URL, calendarUrl, education, languages, certifications (name/issuer/year), avatarUrl (file in /public)."
+    "certifications": [
+      { "name": "Curso de Data Warehousing y Modelado OLAP", "issuer": "Platzi", "year": "2024" },
+      { "name": "Data Fundamentals", "issuer": "IBM", "year": "2024" },
+      { "name": "AWS Educate Getting Started with Security", "issuer": "Amazon Web Services", "year": "2024" },
+      { "name": "AWS Educate Getting Started with Storage", "issuer": "Amazon Web Services", "year": "2024" },
+      { "name": "Bases de Datos con SQL", "issuer": "Platzi", "year": "2024" },
+      { "name": "Docker: Fundamentos", "issuer": "Platzi", "year": "2024" },
+      { "name": "AWS Educate Introduction to Cloud 101", "issuer": "Amazon Web Services", "year": "2024" },
+      { "name": "Introducción a los Patrones de Diseño de Software", "issuer": "Platzi", "year": "2023" },
+      { "name": "Patrones de Diseño con JAVA", "issuer": "Código Facilito", "year": "2023" },
+      { "name": "Profesional de Git y GitHub", "issuer": "Platzi", "year": "2023" }
+    ]
   }
 }
