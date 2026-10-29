@@ -2,14 +2,17 @@
   "main": {
     "name": "Angelo Torella",
     "title": "Desarrollador de Software",
-    "tagline": "Desarrollo de software a medida. TODO: escribir una frase que resuma tu propuesta de valor.",
-    "bio": "Desarrollador de software. Además, cuento con 9 años de experiencia en asistencia informática contable. TODO: ampliar esta biografía con tu enfoque, tecnologías y el tipo de proyectos que buscas.",
-    "email": "TODO@example.com",
+    "headline": "Software a medida para tu negocio o práctica profesional.",
+    "tagline": "Diseño y desarrollo aplicaciones web, automatizaciones y sistemas que encajan con la forma real de trabajar de tu equipo, con comunicación directa y entregas claras.",
+    "bio": "Soy desarrollador de software y trabajo de forma directa con cada cliente: hablas conmigo, sin intermediarios. Además, tengo experiencia en asistencia informática para áreas contables desde 2019, lo que me ayuda a entender cómo funcionan los equipos de trabajo por dentro y a construir herramientas que de verdad se usan.",
+    "email": "angelotorella2002@gmail.com",
     "linkedin": "",
-    "github": "",
+    "github": "https://github.com/AngeloTorella",
     "twitter": "",
     "calendarUrl": "",
-    "education": ["TODO: título o formación — institución (año)"],
-    "languages": [{ "name": "TODO: idioma", "level": "TODO: nivel" }]
+    "education": [],
+    "languages": [],
+    "certifications": [],
+    "_todo": "Owner to provide: location, LinkedIn URL, calendarUrl, education, languages, certifications (name/issuer/year), avatarUrl (file in /public)."
   }
 }

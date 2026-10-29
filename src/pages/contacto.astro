@@ -1,108 +1,148 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Section from '@components/ui/Section.astro';
+import Button from '@components/ui/Button.astro';
+import SocialLinks from '@components/ui/SocialLinks.astro';
 import { getProfile, getServices } from '@lib/content';
 
-const [{ name, email, linkedin, calendarUrl }, services] = await Promise.all([getProfile(), getServices()]);
-// Formspree-compatible endpoint. When unset, the page falls back to a mailto link.
+const [{ name, email, linkedin, github, calendarUrl }, services] = await Promise.all([getProfile(), getServices()]);
+// Formspree-compatible endpoint. When unset, the page falls back to a mailto card.
 const formEndpoint = import.meta.env.PUBLIC_FORM_ENDPOINT?.trim();
 const mailto = `mailto:${email}?subject=${encodeURIComponent('Consulta desde la web')}`;
 
-const inputClass = 'w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white';
-const labelClass = 'block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300';
-const cardClass = 'rounded-xl border border-gray-200 bg-gray-50 p-6 hover:border-primary-300 dark:border-gray-700 dark:bg-gray-900 dark:hover:border-primary-700';
+const inputClass =
+  'w-full rounded-lg border border-line bg-paper px-4 py-2.5 text-ink placeholder:text-muted/70 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30';
+const labelClass = 'mb-1.5 block text-sm font-medium';
+const steps = [
+  'Leo tu mensaje y te respondo con preguntas o con una propuesta de llamada.',
+  'Hablamos para entender tu contexto y tus objetivos.',
+  'Si encaja, te envío alcance, plazos y precio por escrito.',
+];
 ---
-<BaseLayout title={`Contacto — ${name}`} description="Cuéntame tu proyecto y agendamos una llamada sin compromiso">
-  <Section class="pt-12">
-    <div class="mx-auto max-w-3xl">
-      <header class="mb-12 text-center">
-        <h1 class="mb-4 text-3xl font-bold tracking-tight text-gray-900 dark:text-white md:text-4xl">Hablemos</h1>
-        <p class="text-lg text-gray-600 dark:text-gray-300">
-          Cuéntame brevemente qué necesitas y te respondo para agendar una llamada.
-          Si no es buen fit, te lo diré con sinceridad.
-        </p>
-      </header>
+<BaseLayout title={`Contacto | ${name}`} description="Cuéntame tu proyecto y te respondo con los próximos pasos. Primera conversación sin compromiso.">
+  <Section class="pb-12 md:pb-16" labelledby="contact-title">
+    <header class="max-w-2xl">
+      <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-accent">Contacto</p>
+      <h1 id="contact-title" class="font-display text-4xl font-semibold leading-tight tracking-tight md:text-5xl">Hablemos de tu proyecto</h1>
+      <p class="mt-5 text-lg text-muted">
+        Cuéntame brevemente qué necesitas y te respondo. La primera conversación es sin compromiso, y si no soy la persona indicada, te lo diré con sinceridad.
+      </p>
+    </header>
 
-      {formEndpoint ? (
-        <form id="contact-form" class="relative overflow-hidden rounded-xl border border-gray-200 bg-white p-8 shadow-sm dark:border-gray-700 dark:bg-gray-900" action={formEndpoint} method="POST">
-          <!-- Honeypot: real users leave it empty; Formspree discards submissions that fill it. -->
-          <div class="absolute -left-[9999px]" aria-hidden="true">
-            <label for="_gotcha">No rellenar</label>
-            <input type="text" id="_gotcha" name="_gotcha" tabindex="-1" autocomplete="off" />
+    <div class="mt-12 grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-14">
+      <div>
+        {formEndpoint ? (
+          <form id="contact-form" class="relative overflow-hidden rounded-2xl border border-line bg-surface p-6 shadow-card sm:p-8" action={formEndpoint} method="POST">
+            <!-- Honeypot: real users leave it empty; Formspree discards submissions that fill it. -->
+            <div class="absolute -left-[9999px]" aria-hidden="true">
+              <label for="_gotcha">No rellenar</label>
+              <input type="text" id="_gotcha" name="_gotcha" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <div class="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label for="name" class={labelClass}>Nombre <span aria-hidden="true">*</span></label>
+                <input type="text" id="name" name="name" required autocomplete="name" class={inputClass} placeholder="Tu nombre" />
+              </div>
+              <div>
+                <label for="email" class={labelClass}>Email <span aria-hidden="true">*</span></label>
+                <input type="email" id="email" name="email" required autocomplete="email" class={inputClass} placeholder="tu@empresa.com" />
+              </div>
+              <div>
+                <label for="company" class={labelClass}>Empresa o despacho</label>
+                <input type="text" id="company" name="company" autocomplete="organization" class={inputClass} placeholder="Opcional" />
+              </div>
+              <div>
+                <label for="service" class={labelClass}>Servicio</label>
+                <select id="service" name="service" class={inputClass}>
+                  <option value="">Aún no lo sé</option>
+                  {services.map(service => <option value={service.id}>{service.data.title}</option>)}
+                </select>
+              </div>
+            </div>
+
+            <div class="mt-5">
+              <label for="message" class={labelClass}>¿En qué te puedo ayudar? <span aria-hidden="true">*</span></label>
+              <textarea id="message" name="message" required rows="5" class={inputClass} placeholder="Describe tu situación, tus objetivos y, si los tienes, los plazos."></textarea>
+            </div>
+
+            <Button type="submit" size="lg" class="mt-6 w-full sm:w-auto" arrow>Enviar mensaje</Button>
+          </form>
+        ) : (
+          <div class="rounded-2xl border border-line bg-surface p-6 shadow-card sm:p-8">
+            <p class="text-sm font-semibold uppercase tracking-widest text-muted">Escríbeme a</p>
+            <p class="mt-3 break-all font-display text-2xl font-semibold text-ink select-all sm:text-3xl" id="email-text">{email}</p>
+            <p class="mt-3 text-muted">Cuéntame qué necesitas y, si puedes, desde cuándo y para quién sería. Te respondo lo antes posible.</p>
+            <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+              <Button href={mailto} size="lg" arrow>Escribir un email</Button>
+              <button type="button" id="copy-email" data-email={email} class="group inline-flex items-center justify-center gap-2 rounded-lg border border-ink/25 px-6 py-3.5 text-base font-semibold text-ink transition-colors hover:border-brand hover:text-brand">
+                Copiar dirección
+              </button>
+            </div>
+            <p id="copy-status" class="mt-3 min-h-[1.25rem] text-sm text-brand" role="status" aria-live="polite"></p>
           </div>
-
-          <div class="mb-6">
-            <label for="name" class={labelClass}>Nombre *</label>
-            <input type="text" id="name" name="name" required autocomplete="name" class={inputClass} placeholder="Tu nombre" />
-          </div>
-
-          <div class="mb-6">
-            <label for="email" class={labelClass}>Email *</label>
-            <input type="email" id="email" name="email" required autocomplete="email" class={inputClass} placeholder="tu@empresa.com" />
-          </div>
-
-          <div class="mb-6">
-            <label for="company" class={labelClass}>Empresa</label>
-            <input type="text" id="company" name="company" autocomplete="organization" class={inputClass} placeholder="Nombre de tu empresa" />
-          </div>
-
-          <div class="mb-6">
-            <label for="service" class={labelClass}>Servicio</label>
-            <select id="service" name="service" class={inputClass}>
-              <option value="">Sin especificar</option>
-              {services.map(service => <option value={service.id}>{service.data.title}</option>)}
-            </select>
-          </div>
-
-          <div class="mb-8">
-            <label for="message" class={labelClass}>¿En qué te puedo ayudar? *</label>
-            <textarea id="message" name="message" required rows="4" class={inputClass} placeholder="Describe brevemente tu reto, objetivos, plazos..."></textarea>
-          </div>
-
-          <button type="submit" class="w-full rounded-lg bg-primary-600 px-8 py-3 text-base font-semibold text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900">
-            Enviar mensaje
-          </button>
-        </form>
-      ) : (
-        <div class="rounded-xl border border-gray-200 bg-white p-8 text-center shadow-sm dark:border-gray-700 dark:bg-gray-900">
-          <p class="mb-6 text-gray-600 dark:text-gray-300">Escríbeme directamente por email:</p>
-          <a href={mailto} class="inline-flex rounded-lg bg-primary-600 px-8 py-3 text-base font-semibold text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900">
-            {email}
-          </a>
-        </div>
-      )}
-
-      <div class="mt-12 grid gap-6 text-center md:grid-cols-3">
-        <a href={mailto} class={cardClass}>
-          <div class="mb-2 text-3xl">✉️</div>
-          <h3 class="mb-1 font-medium text-gray-900 dark:text-white">Email directo</h3>
-          <p class="break-all text-sm text-gray-600 dark:text-gray-400">{email}</p>
-        </a>
-        {linkedin && (
-          <a href={linkedin} target="_blank" rel="noopener" class={cardClass}>
-            <div class="mb-2 text-3xl">💼</div>
-            <h3 class="mb-1 font-medium text-gray-900 dark:text-white">LinkedIn</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Mensaje directo</p>
-          </a>
-        )}
-        {calendarUrl && (
-          <a href={calendarUrl} target="_blank" rel="noopener" class={cardClass}>
-            <div class="mb-2 text-3xl">📅</div>
-            <h3 class="mb-1 font-medium text-gray-900 dark:text-white">Agenda</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Elige horario directo</p>
-          </a>
         )}
       </div>
+
+      <aside class="space-y-8">
+        <div>
+          <h2 class="font-display text-xl font-semibold">Qué pasa después</h2>
+          <ol class="mt-4 space-y-4">
+            {steps.map((step, i) => (
+              <li class="flex gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-soft text-sm font-semibold text-brand" aria-hidden="true">{i + 1}</span>
+                <span class="text-muted">{step}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        {(formEndpoint || linkedin || github || calendarUrl) && (
+          <div class="border-t border-line pt-6">
+            <h2 class="font-display text-xl font-semibold">Otras vías</h2>
+            {formEndpoint && <p class="mt-4"><a href={mailto} class="font-medium text-brand underline underline-offset-4">{email}</a></p>}
+            <SocialLinks labels class="-ml-2 mt-2 flex-wrap" />
+            {calendarUrl && <p class="mt-2"><a href={calendarUrl} target="_blank" rel="noopener noreferrer" class="font-medium text-brand underline underline-offset-4">Reservar una llamada</a></p>}
+          </div>
+        )}
+      </aside>
     </div>
   </Section>
 
-  {formEndpoint && (
+  {formEndpoint ? (
     <script is:inline>
       // Pre-select the service passed as ?service=<id> (e.g. from a service page CTA).
       (function () {
         var id = new URLSearchParams(location.search).get('service');
         var select = document.getElementById('service');
         if (id && select && select.querySelector('option[value="' + CSS.escape(id) + '"]')) select.value = id;
+      })();
+    </script>
+  ) : (
+    <script is:inline>
+      // Copy the email address to the clipboard, with a text fallback for older browsers.
+      (function () {
+        var btn = document.getElementById('copy-email');
+        var status = document.getElementById('copy-status');
+        if (!btn || !status) return;
+        function done(ok) {
+          status.textContent = ok ? 'Dirección copiada al portapapeles.' : 'No se pudo copiar. Selecciona el texto manualmente.';
+          setTimeout(function () { status.textContent = ''; }, 3500);
+        }
+        btn.addEventListener('click', function () {
+          var email = btn.getAttribute('data-email');
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(email).then(function () { done(true); }, function () { done(false); });
+            return;
+          }
+          var node = document.getElementById('email-text');
+          var range = document.createRange();
+          range.selectNodeContents(node);
+          var sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+          done(document.execCommand && document.execCommand('copy'));
+        });
       })();
     </script>
   )}

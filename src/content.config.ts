@@ -11,6 +11,8 @@ const profile = defineCollection({
     name: z.string(),
     title: z.string(),
     tagline: z.string(),
+    // Hero headline (H1) on the home page. Falls back to `title` when not set.
+    headline: z.string().optional(),
     bio: z.string().optional(),
     email: z.email(),
     location: z.string().optional(),
@@ -22,6 +24,10 @@ const profile = defineCollection({
     calendarUrl: optionalUrl,
     education: z.array(z.string()).default([]),
     languages: z.array(z.object({ name: z.string(), level: z.string() })).default([]),
+    // Shown only on the CV page; hidden when empty.
+    certifications: z
+      .array(z.object({ name: z.string(), issuer: z.string().optional(), year: z.string().optional() }))
+      .default([]),
   }),
 });
 
@@ -45,8 +51,11 @@ const services = defineCollection({
     order: z.number().default(0),
     isActive: z.boolean().default(true),
     priceLabel: z.string().optional(),
-    ctaText: z.string().default('Agendar llamada'),
+    ctaText: z.string().default('Hablemos de tu proyecto'),
     ctaHref: z.string().default('/contacto'),
+    // Bullet lists rendered on the service page ("Qué incluye" / "Qué recibes").
+    includes: z.array(z.string()).default([]),
+    deliverables: z.array(z.string()).default([]),
     techStack: z.array(reference('techStack')).default([]),
   }),
 });
@@ -70,11 +79,14 @@ const caseStudies = defineCollection({
 const experience = defineCollection({
   loader: file('src/content/experience.json'),
   schema: z.object({
-    company: z.string(),
+    // Unknown facts stay unset: the CV page hides whatever is missing.
+    company: z.string().optional(),
     role: z.string(),
     // "YYYY-MM" is formatted as a date; any other string is shown as-is.
-    startDate: z.string(),
+    startDate: z.string().optional(),
     endDate: z.string().optional(),
+    // Free-text span (e.g. "Desde 2019"), shown when exact dates are unknown.
+    duration: z.string().optional(),
     location: z.string().optional(),
     type: z.enum(['full-time', 'contract', 'freelance', 'side-project']).default('full-time'),
     description: z.string().optional(),

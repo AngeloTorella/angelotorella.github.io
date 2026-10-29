@@ -1,25 +1,20 @@
 [
   {
     "id": "software-development",
-    "company": "TODO: empresa o «Freelance»",
     "role": "Desarrollador de Software",
-    "startDate": "TODO: AAAA-MM",
     "type": "full-time",
-    "description": "TODO: describe tu trabajo actual como desarrollador de software.",
-    "highlights": ["TODO: logro o responsabilidad destacada"],
-    "stack": ["TODO: tecnología"],
-    "order": 1
+    "isVisibleInCv": false,
+    "order": 1,
+    "_todo": "Hidden until the owner provides company/«Freelance», start date, description, highlights and stack. Then set isVisibleInCv to true."
   },
   {
     "id": "accounting-it-support",
-    "company": "TODO: empresa",
-    "role": "Asistencia informática contable",
-    "startDate": "TODO: AAAA-MM",
-    "endDate": "TODO: AAAA-MM",
+    "role": "Asistencia informática para áreas contables",
+    "startDate": "2019",
     "type": "full-time",
-    "description": "9 años de experiencia en asistencia informática contable. TODO: detallar funciones y herramientas.",
-    "highlights": ["TODO: logro o responsabilidad destacada"],
-    "stack": [],
-    "order": 2
+    "description": "Asistencia informática a equipos contables: resolución de incidencias, apoyo en el uso de herramientas y acompañamiento técnico.",
+    "isVisibleInCv": true,
+    "order": 2,
+    "_todo": "Optional: add company, exact start/end dates (YYYY-MM), highlights and stack. Currently shown as 2019 – Actualidad."
   }
 ]

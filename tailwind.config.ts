@@ -1,51 +1,37 @@
 import type { Config } from 'tailwindcss';
 
+// Semantic palette. Actual values live as CSS variables in src/styles/global.css
+// (light by default, dark via prefers-color-scheme), so components never need `dark:` variants.
+const token = (name: string) => `rgb(var(--${name}) / <alpha-value>)`;
+
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   theme: {
     extend: {
       colors: {
-        primary: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
-          950: '#082f49',
+        paper: token('paper'), // page background
+        sunken: token('sunken'), // alternate section background
+        surface: token('surface'), // cards
+        ink: token('ink'), // primary text
+        muted: token('muted'), // secondary text
+        line: token('line'), // borders
+        brand: {
+          DEFAULT: token('brand'),
+          strong: token('brand-strong'),
+          soft: token('brand-soft'),
         },
-        accent: {
-          50: '#fdf4ff',
-          100: '#fae8ff',
-          200: '#f5d0fe',
-          300: '#f0abfc',
-          400: '#e879f9',
-          500: '#d946ef',
-          600: '#c026d3',
-          700: '#a21caf',
-          800: '#86198f',
-          900: '#701a75',
-          950: '#4a044e',
-        },
+        'on-brand': token('on-brand'),
+        accent: token('accent'),
+        band: token('band'), // dark call-to-action band
+        'band-fg': token('band-fg'),
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
+        sans: ['Figtree', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['Fraunces', 'ui-serif', 'Georgia', 'serif'],
       },
-      container: {
-        center: true,
-        padding: '1.5rem',
-        screens: {
-          sm: '640px',
-          md: '768px',
-          lg: '1024px',
-          xl: '1280px',
-          '2xl': '1400px',
-        },
+      boxShadow: {
+        card: '0 1px 2px rgb(20 30 28 / 0.05), 0 8px 24px -12px rgb(20 30 28 / 0.12)',
+        lift: '0 2px 4px rgb(20 30 28 / 0.06), 0 18px 36px -14px rgb(20 30 28 / 0.22)',
       },
     },
   },

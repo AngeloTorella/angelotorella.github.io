@@ -1,4 +1,5 @@
 ---
+import '../styles/global.css';
 import Header from '@components/layout/Header.astro';
 import Footer from '@components/layout/Footer.astro';
 import { publicFileExists } from '@lib/content';
@@ -7,10 +8,12 @@ interface Props {
   title: string;
   description?: string;
 }
-const { title, description = 'Desarrollador de Software' } = Astro.props;
+const { title, description = 'Desarrollo de software a medida, automatización y soporte de sistemas para empresas y profesionales.' } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 // Only advertise a social image if one has been added to /public.
 const socialImage = publicFileExists('og-image.png') ? new URL('/og-image.png', Astro.site) : undefined;
+const fontsHref =
+  'https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap';
 ---
 <!doctype html>
 <html lang="es">
@@ -18,6 +21,9 @@ const socialImage = publicFileExists('og-image.png') ? new URL('/og-image.png', 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#faf8f3" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0f1514" media="(prefers-color-scheme: dark)" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <title>{title}</title>
@@ -27,16 +33,24 @@ const socialImage = publicFileExists('og-image.png') ? new URL('/og-image.png', 
     <meta property="og:description" content={description} />
     {socialImage && <meta property="og:image" content={socialImage} />}
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_ES" />
     <meta name="twitter:card" content={socialImage ? 'summary_large_image' : 'summary'} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     {socialImage && <meta name="twitter:image" content={socialImage} />}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'" />
+    <link rel="preload" as="style" href={fontsHref} />
+    <link rel="stylesheet" href={fontsHref} media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href={fontsHref} /></noscript>
   </head>
-  <body class="font-sans antialiased bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+  <body class="min-h-screen bg-paper font-sans text-ink antialiased">
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-brand focus:px-4 focus:py-2 focus:text-on-brand"
+    >
+      Saltar al contenido
+    </a>
     <Header />
     <main id="main-content"><slot /></main>
     <Footer />

@@ -1,35 +1,32 @@
 ---
 interface Props {
   href?: string;
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
-  disabled?: boolean;
-  type?: 'button' | 'submit' | 'reset';
+  variant?: 'primary' | 'secondary' | 'inverse';
+  size?: 'md' | 'lg';
+  type?: 'button' | 'submit';
   class?: string;
+  arrow?: boolean;
 }
-const { href, variant = 'primary', size = 'md', disabled = false, type = 'button', class: className = '' } = Astro.props;
+const { href, variant = 'primary', size = 'md', type = 'button', class: className = '', arrow = false } = Astro.props;
 
-const base = 'inline-flex items-center justify-center font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none rounded-lg';
+const base =
+  'group inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-colors duration-200 disabled:opacity-50';
 const variants = {
-  primary: 'bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800',
-  secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200 active:bg-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700',
-  outline: 'border border-gray-300 bg-transparent hover:bg-gray-100 active:bg-gray-200 dark:border-gray-600 dark:hover:bg-gray-800',
-  ghost: 'bg-transparent hover:bg-gray-100 active:bg-gray-200 dark:hover:bg-gray-800',
+  primary: 'bg-brand text-on-brand shadow-sm hover:bg-brand-strong',
+  secondary: 'border border-ink/25 bg-transparent text-ink hover:border-brand hover:text-brand',
+  inverse: 'bg-band-fg text-band hover:bg-white',
 };
-const sizes = {
-  sm: 'px-3 py-1.5 text-sm gap-1.5',
-  md: 'px-4 py-2 text-base gap-2',
-  lg: 'px-6 py-3 text-lg gap-2.5',
-};
-
+const sizes = { md: 'px-5 py-2.5 text-sm', lg: 'px-6 py-3.5 text-base' };
 const classes = `${base} ${variants[variant]} ${sizes[size]} ${className}`;
 ---
 {href ? (
-  <a href={href} class={classes} aria-disabled={disabled}>
+  <a href={href} class={classes}>
     <slot />
+    {arrow && <span aria-hidden="true" class="transition-transform duration-200 group-hover:translate-x-0.5">→</span>}
   </a>
 ) : (
-  <button type={type} class={classes} disabled={disabled}>
+  <button type={type} class={classes}>
     <slot />
+    {arrow && <span aria-hidden="true">→</span>}
   </button>
 )}

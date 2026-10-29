@@ -1,45 +1,40 @@
 ---
+import SocialLinks from '@components/ui/SocialLinks.astro';
 import { getProfile, getServices } from '@lib/content';
-const [{ name, title, email, linkedin, github, twitter, location }, services] = await Promise.all([
-  getProfile(),
-  getServices(),
-]);
-const hasSocials = Boolean(linkedin || github || twitter);
+
+const [{ name, title, email, location }, services] = await Promise.all([getProfile(), getServices()]);
+const linkClass = 'text-muted transition-colors hover:text-brand';
 ---
-<footer class="border-t border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-950">
-  <div class="container mx-auto px-4 py-12 md:px-6">
-    <div class="grid gap-8 md:grid-cols-3">
+<footer class="border-t border-line bg-sunken">
+  <div class="mx-auto max-w-6xl px-5 py-14 sm:px-8">
+    <div class="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
       <div>
-        <h3 class="mb-4 font-semibold text-gray-900 dark:text-white">{name}</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">{title}</p>
-        <div class="flex flex-wrap gap-4 text-sm">
-          {location && <span class="text-gray-600 dark:text-gray-400">📍 {location}</span>}
-          {email && <a href={`mailto:${email}`} class="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400">✉️ {email}</a>}
-        </div>
+        <p class="font-display text-xl font-semibold">{name}</p>
+        <p class="mt-1 text-sm text-muted">{title}</p>
+        {location && <p class="mt-1 text-sm text-muted">{location}</p>}
+        <a href={`mailto:${email}`} class="mt-5 inline-block break-all text-base font-medium text-brand underline underline-offset-4 hover:text-brand-strong">{email}</a>
+        <SocialLinks labels class="-ml-2 mt-3 flex-wrap" />
       </div>
-      <div>
-        <h4 class="mb-3 font-medium text-gray-900 dark:text-white">Conectar</h4>
-        <div class="flex flex-wrap gap-3 text-sm">
-          {linkedin && <a href={linkedin} target="_blank" rel="noopener" class="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400">LinkedIn</a>}
-          {github && <a href={github} target="_blank" rel="noopener" class="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400">GitHub</a>}
-          {twitter && <a href={twitter} target="_blank" rel="noopener" class="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400">Twitter / X</a>}
-          {!hasSocials && <a href="/contacto" class="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400">Contacto</a>}
-        </div>
-      </div>
-      <div>
-        <h4 class="mb-3 font-medium text-gray-900 dark:text-white">Servicios</h4>
-        <nav aria-label="Servicios">
-          <ul class="space-y-2 text-sm">
-            {services.map(service => (
-              <li><a href={`/services/${service.id}`} class="text-gray-600 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400">{service.data.title}</a></li>
-            ))}
-          </ul>
-        </nav>
-      </div>
+
+      <nav aria-label="Servicios">
+        <h2 class="mb-3 text-sm font-semibold uppercase tracking-wider text-ink">Servicios</h2>
+        <ul class="space-y-2 text-sm">
+          {services.map(service => (
+            <li><a href={`/services/${service.id}`} class={linkClass}>{service.data.title}</a></li>
+          ))}
+        </ul>
+      </nav>
+
+      <nav aria-label="Más enlaces">
+        <h2 class="mb-3 text-sm font-semibold uppercase tracking-wider text-ink">Más</h2>
+        <ul class="space-y-2 text-sm">
+          <li><a href="/#proceso" class={linkClass}>Cómo trabajo</a></li>
+          <li><a href="/cv" class={linkClass}>CV</a></li>
+          <li><a href="/contacto" class={linkClass}>Contacto</a></li>
+        </ul>
+      </nav>
     </div>
-    <div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-800 text-center text-sm text-gray-500 dark:text-gray-400">
-      <p>© {new Date().getFullYear()} {name}. Todos los derechos reservados.</p>
-      <p class="mt-1">Sitio estático construido con Astro + Tailwind CSS · Alojado en GitHub Pages</p>
-    </div>
+
+    <p class="mt-12 border-t border-line pt-6 text-sm text-muted">© {new Date().getFullYear()} {name}. Todos los derechos reservados.</p>
   </div>
 </footer>

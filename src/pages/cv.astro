@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Section from '@components/ui/Section.astro';
+import Button from '@components/ui/Button.astro';
+import CTASection from '@components/layout/CTASection.astro';
 import {
   getProfile,
   getExperienceForCv,
@@ -16,7 +18,7 @@ const [profile, experience, skillGroups] = await Promise.all([
   getExperienceForCv(),
   getTechStackByCategory(),
 ]);
-const { name, title, tagline, bio, email, linkedin, github, location, education, languages } = profile;
+const { name, title, bio, email, linkedin, github, location, education, languages, certifications } = profile;
 // The download link only renders when the PDF has been placed in /public.
 const hasPdf = publicFileExists(CV_PDF_PATH);
 
@@ -26,121 +28,134 @@ const typeLabels: Record<string, string> = {
   freelance: 'Freelance',
   'side-project': 'Proyecto personal',
 };
+
+/** Human-readable span for an entry; empty when nothing is known. */
+function period(exp: { startDate?: string; endDate?: string; duration?: string }) {
+  if (exp.startDate) return `${formatMonth(exp.startDate)} – ${exp.endDate ? formatMonth(exp.endDate) : 'Actualidad'}`;
+  return exp.duration ?? '';
+}
+
+const h2 = 'font-display text-2xl font-semibold tracking-tight';
 ---
-<BaseLayout title={`CV — ${name}`} description={`Curriculum vitae de ${name}, ${title}`}>
-  <Section class="pt-12 pb-8">
-    <div class="mx-auto max-w-4xl">
-      <header class="mb-12 text-center">
-        <h1 class="mb-2 text-3xl font-bold text-gray-900 dark:text-white md:text-4xl">{name}</h1>
-        <p class="mb-2 text-xl text-primary-600 dark:text-primary-400">{title}</p>
-        <p class="mb-6 text-lg text-gray-600 dark:text-gray-400">{tagline}</p>
-        <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-          {location && <span>📍 {location}</span>}
-          {email && <a href={`mailto:${email}`} class="hover:text-primary-600 dark:hover:text-primary-400">✉️ {email}</a>}
-          {linkedin && <a href={linkedin} target="_blank" rel="noopener" class="hover:text-primary-600 dark:hover:text-primary-400">LinkedIn</a>}
-          {github && <a href={github} target="_blank" rel="noopener" class="hover:text-primary-600 dark:hover:text-primary-400">GitHub</a>}
-        </div>
-        {hasPdf && (
-          <a href={CV_PDF_PATH} download class="mt-8 inline-flex items-center gap-2 rounded-lg bg-primary-600 px-8 py-3 text-base font-semibold text-white shadow-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-950 transition-colors">
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-            Descargar CV (PDF)
-          </a>
-        )}
-      </header>
+<BaseLayout title={`CV | ${name}`} description={`Trayectoria profesional de ${name}, ${title}.`}>
+  <Section class="pb-8 md:pb-12" labelledby="cv-title">
+    <header class="max-w-3xl">
+      <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-accent">Currículum</p>
+      <h1 id="cv-title" class="font-display text-4xl font-semibold leading-tight tracking-tight md:text-5xl">{name}</h1>
+      <p class="mt-2 text-xl text-brand">{title}</p>
+      <div class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-muted">
+        {location && <span>{location}</span>}
+        <a href={`mailto:${email}`} class="underline underline-offset-4 hover:text-brand">{email}</a>
+        {linkedin && <a href={linkedin} target="_blank" rel="noopener noreferrer" class="underline underline-offset-4 hover:text-brand">LinkedIn</a>}
+        {github && <a href={github} target="_blank" rel="noopener noreferrer" class="underline underline-offset-4 hover:text-brand">GitHub</a>}
+      </div>
+      {hasPdf && (
+        <Button href={CV_PDF_PATH} size="lg" class="mt-8">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+          Descargar CV (PDF)
+        </Button>
+      )}
+    </header>
 
-      <div class="space-y-12">
-        {bio && (
-          <section>
-            <h2 class="mb-4 text-2xl font-bold text-gray-900 dark:text-white">Resumen</h2>
-            <p class="text-gray-600 dark:text-gray-300">{bio}</p>
-          </section>
-        )}
+    <div class="mt-14 max-w-3xl space-y-14">
+      {bio && (
+        <section aria-labelledby="cv-resumen">
+          <h2 id="cv-resumen" class={h2}>Resumen</h2>
+          <p class="mt-4 text-lg leading-relaxed text-muted">{bio}</p>
+        </section>
+      )}
 
-        {experience.length > 0 && (
-          <section>
-            <h2 class="mb-6 text-2xl font-bold text-gray-900 dark:text-white">Experiencia</h2>
-            <div class="space-y-8">
-              {experience.map(({ data: exp }) => (
-                <article class="border-l-2 border-gray-200 pl-6 dark:border-gray-700">
-                  <div class="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between">
-                    <div>
-                      <h3 class="text-xl font-semibold text-gray-900 dark:text-white">{exp.role}</h3>
-                      <p class="text-primary-600 dark:text-primary-400">{exp.company}</p>
-                    </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 md:whitespace-nowrap">
-                      {formatMonth(exp.startDate)} – {exp.endDate ? formatMonth(exp.endDate) : 'Actualidad'}
-                    </p>
+      {experience.length > 0 && (
+        <section aria-labelledby="cv-exp">
+          <h2 id="cv-exp" class={h2}>Experiencia</h2>
+          <div class="mt-6 space-y-8">
+            {experience.map(({ data: exp }) => {
+              const when = period(exp);
+              const meta = [exp.company, exp.location, typeLabels[exp.type]].filter(Boolean).join(' · ');
+              return (
+                <article class="border-l-2 border-brand pl-6">
+                  <div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+                    <h3 class="text-xl font-semibold">{exp.role}</h3>
+                    {when && <p class="text-sm font-medium text-brand sm:whitespace-nowrap">{when}</p>}
                   </div>
-                  <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                    {[exp.location, typeLabels[exp.type]].filter(Boolean).join(' · ')}
-                  </p>
-                  {exp.description && <p class="mt-3 text-gray-600 dark:text-gray-300">{exp.description}</p>}
+                  {meta && <p class="mt-1 text-sm text-muted">{meta}</p>}
+                  {exp.description && <p class="mt-3 text-muted">{exp.description}</p>}
                   {exp.highlights.length > 0 && (
-                    <ul class="mt-3 space-y-2">
-                      {exp.highlights.map(h => (
-                        <li class="flex gap-2 text-gray-600 dark:text-gray-300">
-                          <span class="text-primary-500">→</span> {h}
-                        </li>
-                      ))}
+                    <ul class="mt-3 list-disc space-y-1.5 pl-5 text-muted">
+                      {exp.highlights.map(h => <li>{h}</li>)}
                     </ul>
                   )}
                   {exp.stack.length > 0 && (
                     <div class="mt-3 flex flex-wrap gap-2">
                       {exp.stack.map(tech => (
-                        <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-300">{tech}</span>
+                        <span class="rounded-full bg-brand-soft px-2.5 py-0.5 text-xs font-medium text-brand">{tech}</span>
                       ))}
                     </div>
                   )}
                 </article>
-              ))}
-            </div>
-          </section>
-        )}
+              );
+            })}
+          </div>
+        </section>
+      )}
 
-        {skillGroups.length > 0 && (
-          <section>
-            <h2 class="mb-6 text-2xl font-bold text-gray-900 dark:text-white">Competencias técnicas</h2>
-            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {skillGroups.map(group => (
-                <div class="rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-900">
-                  <h3 class="mb-3 font-medium text-gray-900 dark:text-white">{group.category}</h3>
-                  <div class="flex flex-wrap gap-2">
-                    {group.skills.map(s => (
-                      <span class="rounded-full bg-primary-50 px-2.5 py-0.5 text-xs font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-300">{s}</span>
-                    ))}
-                  </div>
+      {skillGroups.length > 0 && (
+        <section aria-labelledby="cv-skills">
+          <h2 id="cv-skills" class={h2}>Competencias técnicas</h2>
+          <div class="mt-6 grid gap-4 sm:grid-cols-2">
+            {skillGroups.map(group => (
+              <div class="rounded-2xl border border-line bg-surface p-5 shadow-card">
+                <h3 class="mb-3 font-semibold">{group.category}</h3>
+                <div class="flex flex-wrap gap-2">
+                  {group.skills.map(s => (
+                    <span class="rounded-full bg-brand-soft px-2.5 py-0.5 text-xs font-medium text-brand">{s}</span>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </section>
-        )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
-        {(education.length > 0 || languages.length > 0) && (
-          <section>
-            <h2 class="mb-6 text-2xl font-bold text-gray-900 dark:text-white">Educación e idiomas</h2>
-            <div class="grid gap-6 md:grid-cols-2">
-              {education.length > 0 && (
-                <div>
-                  <h3 class="mb-3 font-medium text-gray-900 dark:text-white">Formación</h3>
-                  <ul class="space-y-2">
-                    {education.map(item => <li class="text-gray-600 dark:text-gray-300">{item}</li>)}
-                  </ul>
-                </div>
-              )}
-              {languages.length > 0 && (
-                <div>
-                  <h3 class="mb-3 font-medium text-gray-900 dark:text-white">Idiomas</h3>
-                  <ul class="space-y-2">
-                    {languages.map(lang => (
-                      <li class="flex justify-between gap-4 text-gray-600 dark:text-gray-300"><span>{lang.name}</span><span class="font-medium text-primary-600 dark:text-primary-400">{lang.level}</span></li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          </section>
-        )}
-      </div>
+      {certifications.length > 0 && (
+        <section aria-labelledby="cv-certs">
+          <h2 id="cv-certs" class={h2}>Certificaciones</h2>
+          <ul class="mt-6 space-y-2 text-muted">
+            {certifications.map(c => (
+              <li>
+                <span class="font-medium text-ink">{c.name}</span>
+                {[c.issuer, c.year].filter(Boolean).length > 0 && <span> · {[c.issuer, c.year].filter(Boolean).join(', ')}</span>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {(education.length > 0 || languages.length > 0) && (
+        <section aria-labelledby="cv-edu">
+          <h2 id="cv-edu" class={h2}>Formación e idiomas</h2>
+          <div class="mt-6 grid gap-8 sm:grid-cols-2">
+            {education.length > 0 && (
+              <div>
+                <h3 class="mb-3 font-semibold">Formación</h3>
+                <ul class="space-y-2 text-muted">{education.map(item => <li>{item}</li>)}</ul>
+              </div>
+            )}
+            {languages.length > 0 && (
+              <div>
+                <h3 class="mb-3 font-semibold">Idiomas</h3>
+                <ul class="space-y-2 text-muted">
+                  {languages.map(lang => (
+                    <li class="flex justify-between gap-4"><span>{lang.name}</span><span class="font-medium text-brand">{lang.level}</span></li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
     </div>
   </Section>
+
+  <CTASection />
 </BaseLayout>
