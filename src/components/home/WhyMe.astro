@@ -1,0 +1,42 @@
+---
+import Section from '@components/ui/Section.astro';
+import { getProfile } from '@lib/content';
+
+const { bio } = await getProfile();
+const points = [
+  {
+    title: 'Hablas directamente con quien desarrolla',
+    text: 'Sin intermediarios ni malentendidos: lo que me cuentas es lo que se construye.',
+  },
+  {
+    title: 'Traduzco necesidades a soluciones concretas',
+    text: 'Explico las opciones en lenguaje claro y propongo lo que de verdad necesitas, no lo más complejo.',
+  },
+  {
+    title: 'Herramientas que tu equipo usa de verdad',
+    text: 'Prefiero soluciones sencillas y mantenibles a sistemas complejos que acaban sin usarse.',
+  },
+];
+---
+<Section id="por-que-yo" tone="sunken" labelledby="why-title">
+  <div class="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
+    <div>
+      <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-accent">Sobre mí</p>
+      <h2 id="why-title" class="font-display text-3xl font-semibold leading-tight tracking-tight md:text-4xl">
+        Un desarrollador cercano, claro y orientado a resultados
+      </h2>
+      {bio && <p class="mt-6 text-lg leading-relaxed text-muted">{bio}</p>}
+    </div>
+    <ul class="space-y-4">
+      {points.map((point, i) => (
+        <li class="flex gap-5 rounded-2xl border border-line bg-surface p-6 shadow-card">
+          <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand font-display text-lg font-semibold text-on-brand" aria-hidden="true">{i + 1}</span>
+          <div>
+            <h3 class="text-lg font-semibold">{point.title}</h3>
+            <p class="mt-1 text-muted">{point.text}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</Section>

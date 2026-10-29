@@ -1,0 +1,113 @@
+/* Design tokens as space-separated RGB channels so Tailwind can apply opacity. */
+:root {
+  color-scheme: light;
+  --paper: 250 248 243;
+  --sunken: 241 237 228;
+  --surface: 255 255 255;
+  --ink: 24 31 30;
+  --muted: 79 90 88;
+  --line: 223 217 204;
+  --brand: 11 93 82;
+  --brand-strong: 7 70 62;
+  --brand-soft: 222 238 234;
+  --on-brand: 255 255 255;
+  --accent: 160 78 8;
+  --band: 12 58 52;
+  --band-fg: 245 242 234;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --paper: 15 21 20;
+    --sunken: 20 29 28;
+    --surface: 24 35 33;
+    --ink: 236 241 239;
+    --muted: 167 182 177;
+    --line: 41 56 53;
+    --brand: 94 214 196;
+    --brand-strong: 140 230 214;
+    --brand-soft: 24 52 48;
+    --on-brand: 6 32 28;
+    --accent: 240 178 96;
+    --band: 17 54 49;
+    --band-fg: 240 245 243;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  background-color: rgb(var(--paper));
+  color: rgb(var(--ink));
+}
+
+::selection {
+  background: rgb(var(--brand) / 0.25);
+}
+
+/* Visible keyboard focus everywhere. */
+:focus-visible {
+  outline: 2px solid rgb(var(--brand));
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.on-band :focus-visible {
+  outline-color: rgb(var(--band-fg));
+}
+
+/* Gentle entrance for the hero; disabled when the user prefers reduced motion. */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.rise-in {
+  animation: rise-in 0.6s ease-out both;
+}
+.rise-in-delay {
+  animation: rise-in 0.6s ease-out 0.12s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Markdown body of a service page. */
+.prose-lite p {
+  margin-bottom: 1rem;
+  line-height: 1.75;
+}
+.prose-lite strong {
+  font-weight: 600;
+  color: rgb(var(--ink));
+}
+.prose-lite a {
+  color: rgb(var(--brand));
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose-lite ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+  margin-bottom: 1rem;
+}
+.prose-lite li {
+  margin-bottom: 0.25rem;
+}

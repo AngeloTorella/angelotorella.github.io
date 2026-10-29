@@ -1,12 +1,15 @@
 ---
 interface Props {
+  id?: string;
+  tone?: 'paper' | 'sunken';
   class?: string;
-  padded?: boolean;
+  labelledby?: string;
 }
-const { class: className = '', padded = true } = Astro.props;
+const { id, tone = 'paper', class: className = '', labelledby } = Astro.props;
+const tones = { paper: 'bg-paper', sunken: 'bg-sunken' };
 ---
-<section class={`py-16 md:py-24 ${padded ? 'px-4 md:px-6' : ''} ${className}`}>
-  <div class="container mx-auto">
+<section id={id} aria-labelledby={labelledby} class={`py-16 md:py-24 ${tones[tone]} ${className}`}>
+  <div class="mx-auto max-w-6xl px-5 sm:px-8">
     <slot />
   </div>
 </section>
