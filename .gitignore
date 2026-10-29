@@ -6,7 +6,10 @@ dist/
 .build/
 .astro/
 
-# Local AI tooling cache
+# AI agent instructions and tooling (local only, never published)
+AGENTS.md
+CLAUDE.md
+.claude/
 .atl/
 
 # Environment files
