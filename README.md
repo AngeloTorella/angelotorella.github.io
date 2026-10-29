@@ -1,4 +1,4 @@
-# angelotorella.com
+# angelotorella.github.io
 
 Personal site of Angelo Torella. Fully static: no server, no database.
 
@@ -6,7 +6,7 @@ Personal site of Angelo Torella. Fully static: no server, no database.
 
 - [Astro 7](https://docs.astro.build) (`output: 'static'`) with content collections
 - Tailwind CSS 3 (`@astrojs/tailwind`)
-- GitHub Pages hosting on the custom domain `angelotorella.com` (`public/CNAME`)
+- GitHub Pages hosting at https://angelotorella.github.io
 - Optional contact form via any Formspree-compatible endpoint
 
 ## Editing content
@@ -48,5 +48,5 @@ Pushing to `main` runs `.github/workflows/deploy.yml` (`withastro/action` + `act
 One-time setup in the GitHub repository:
 
 1. Settings → Pages → Source: **GitHub Actions**.
-2. Settings → Pages → Custom domain: `angelotorella.com`, and point the domain's DNS to GitHub Pages.
+2. Optional: to use a custom domain, add `public/CNAME` with the domain, update `site` in `astro.config.mjs`, and point the domain's DNS to GitHub Pages.
 3. Optional: Settings → Secrets and variables → Actions → Variables → `PUBLIC_FORM_ENDPOINT`.
