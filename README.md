@@ -41,9 +41,19 @@ pnpm preview
 
 Contact form: copy `.env.example` to `.env` and set `PUBLIC_FORM_ENDPOINT` (e.g. `https://formspree.io/f/<id>`). If it is empty, `/contacto` shows a mailto link instead.
 
+## Workflow
+
+This repository uses **trunk-based development**:
+
+- `main` is the only long-lived branch and is always deployable.
+- Commit small, focused changes directly to `main` using [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`, `chore:`).
+- Use a short-lived branch only for a large change, and merge it back within a day or two.
+- Run `pnpm check && pnpm build` before pushing. CI runs the same checks and blocks the deploy if they fail.
+- AI agent instructions (`AGENTS.md`, `CLAUDE.md`, `.claude/`) stay local and are git-ignored. If something is committed by mistake, follow [docs/accidental-commit-runbook.md](docs/accidental-commit-runbook.md).
+
 ## Deploy
 
-Pushing to `main` runs `.github/workflows/deploy.yml` (`withastro/action` + `actions/deploy-pages`).
+Pushing to `main` runs `.github/workflows/deploy.yml`: a `check` job (`astro check`) must pass before the `build` (`withastro/action`) and `deploy` (`actions/deploy-pages`) jobs run.
 
 One-time setup in the GitHub repository:
 
