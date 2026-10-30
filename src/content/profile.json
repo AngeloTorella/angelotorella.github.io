@@ -1,10 +1,22 @@
 {
   "main": {
     "name": "Angelo Torella",
-    "title": "Desarrollador de Software",
-    "headline": "Software a medida para tu negocio o práctica profesional.",
-    "tagline": "Diseño y desarrollo aplicaciones web, automatizaciones y sistemas que encajan con la forma real de trabajar de tu equipo, con comunicación directa y entregas claras.",
-    "bio": "Soy desarrollador de software y trabajo de forma directa con cada cliente: hablas conmigo, sin intermediarios. Además, tengo experiencia en asistencia informática para áreas contables desde 2019, lo que me ayuda a entender cómo funcionan los equipos de trabajo por dentro y a construir herramientas que de verdad se usan.",
+    "title": {
+      "es": "Desarrollador de Software",
+      "en": "Software Developer"
+    },
+    "headline": {
+      "es": "Software a medida para tu negocio o práctica profesional.",
+      "en": "Custom software for your business or professional practice."
+    },
+    "tagline": {
+      "es": "Diseño y desarrollo aplicaciones web, automatizaciones y sistemas que encajan con la forma real de trabajar de tu equipo, con comunicación directa y entregas claras.",
+      "en": "I design and build web applications, automations and systems that fit the way your team actually works, with direct communication and clear deliverables."
+    },
+    "bio": {
+      "es": "Soy desarrollador de software y trabajo de forma directa con cada cliente: hablas conmigo, sin intermediarios. Además, tengo experiencia en asistencia informática para áreas contables desde 2019, lo que me ayuda a entender cómo funcionan los equipos de trabajo por dentro y a construir herramientas que de verdad se usan.",
+      "en": "I am a software developer and I work directly with each client: you talk to me, with no middlemen. I also have experience providing IT support for accounting teams since 2019, which helps me understand how teams work from the inside and build tools that actually get used."
+    },
     "email": "artorella.20@proton.me",
     "location": "Caracas, Venezuela",
     "linkedin": "https://www.linkedin.com/in/angelo-torella-7266b62a0/",

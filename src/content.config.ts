@@ -5,15 +5,18 @@ import { z } from 'astro/zod';
 // Empty string means "not set": the UI hides links whose value is ''.
 const optionalUrl = z.union([z.literal(''), z.url()]).default('');
 
+// Text that changes with the site language.
+const localized = z.object({ es: z.string(), en: z.string() });
+
 const profile = defineCollection({
   loader: file('src/content/profile.json'),
   schema: z.object({
     name: z.string(),
-    title: z.string(),
-    tagline: z.string(),
+    title: localized,
+    tagline: localized,
     // Hero headline (H1) on the home page. Falls back to `title` when not set.
-    headline: z.string().optional(),
-    bio: z.string().optional(),
+    headline: localized.optional(),
+    bio: localized.optional(),
     email: z.email(),
     location: z.string().optional(),
     // Path relative to /public (e.g. "/images/avatar.jpg"). Only rendered if the file exists.
@@ -41,7 +44,7 @@ const techStack = defineCollection({
   }),
 });
 
-// Markdown files: frontmatter holds the fields, the body is the description.
+// Markdown files in services/<lang>/<slug>.md (same file name in every language): frontmatter holds the fields, the body is the description.
 const services = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/services' }),
   schema: z.object({
@@ -65,6 +68,8 @@ const caseStudies = defineCollection({
   schema: z.object({
     title: z.string(),
     service: reference('services'),
+    // Language this case study is written in.
+    lang: z.enum(['es', 'en']).default('es'),
     client: z.string().optional(),
     challenge: z.string().optional(),
     solution: z.string().optional(),

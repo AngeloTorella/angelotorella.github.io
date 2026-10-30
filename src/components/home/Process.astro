@@ -1,18 +1,20 @@
 ---
 import Section from '@components/ui/Section.astro';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 
-const steps = [
-  { title: 'Conversación inicial', text: 'Me cuentas tu situación y tus objetivos. Sin compromiso y sin tecnicismos.' },
-  { title: 'Propuesta clara', text: 'Recibes por escrito el alcance, los plazos y el precio antes de empezar.' },
-  { title: 'Desarrollo por etapas', text: 'Te muestro avances de forma regular para que puedas corregir el rumbo a tiempo.' },
-  { title: 'Entrega y acompañamiento', text: 'Te entrego todo documentado, te explico cómo usarlo y sigo disponible para dudas.' },
-];
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const steps = ([1, 2, 3, 4] as const).map((n) => ({
+  title: t(`process.step${n}.title`),
+  text: t(`process.step${n}.text`),
+}));
 ---
 <Section id="proceso" labelledby="proceso-title">
   <div class="mb-12 max-w-2xl">
-    <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-accent">Cómo trabajo</p>
+    <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-accent">{t('process.eyebrow')}</p>
     <h2 id="proceso-title" class="font-display text-3xl font-semibold leading-tight tracking-tight md:text-4xl">
-      Un proceso simple, sin sorpresas
+      {t('process.title')}
     </h2>
   </div>
   <ol class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">

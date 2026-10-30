@@ -37,7 +37,7 @@ function period(exp: { startDate?: string; endDate?: string; duration?: string }
 
 const h2 = 'font-display text-2xl font-semibold tracking-tight';
 ---
-<BaseLayout title={`CV | ${name}`} description={`Trayectoria profesional de ${name}, ${title}.`}>
+<BaseLayout title={`CV | ${name}`} description={`Trayectoria profesional de ${name}, ${title}.`} route={{ name: 'home' }}>
   <Section class="pb-8 md:pb-12" labelledby="cv-title">
     <header class="max-w-3xl">
       <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-accent">Currículum</p>

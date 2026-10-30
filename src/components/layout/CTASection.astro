@@ -1,6 +1,7 @@
 ---
 import Button from '@components/ui/Button.astro';
 import { getProfile } from '@lib/content';
+import { getLangFromUrl, routePath, useTranslations } from '@/i18n/utils';
 
 interface Props {
   title?: string;
@@ -8,13 +9,15 @@ interface Props {
   ctaText?: string;
   ctaHref?: string;
 }
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 const {
-  title = '¿Hablamos de tu proyecto?',
-  description = 'Cuéntame qué necesitas. Te respondo con los próximos pasos y, si no soy la persona indicada, te lo diré con sinceridad.',
-  ctaText = 'Hablemos de tu proyecto',
-  ctaHref = '/contacto',
+  title = t('cta.title'),
+  description = t('cta.description'),
+  ctaText = t('cta.button'),
+  ctaHref = routePath({ name: 'contact' }, lang),
 } = Astro.props;
-const { email } = await getProfile();
+const { email } = await getProfile(lang);
 ---
 <section class="on-band bg-band py-16 text-band-fg md:py-20" aria-labelledby="cta-title">
   <div class="mx-auto flex max-w-6xl flex-col items-start gap-8 px-5 sm:px-8 md:flex-row md:items-center md:justify-between">
@@ -24,7 +27,7 @@ const { email } = await getProfile();
     </div>
     <div class="flex flex-col items-start gap-3">
       <Button href={ctaHref} variant="inverse" size="lg" arrow>{ctaText}</Button>
-      <a href={`mailto:${email}`} class="break-all text-sm text-band-fg/85 underline underline-offset-4 hover:text-band-fg">o escribe a {email}</a>
+      <a href={`mailto:${email}`} class="break-all text-sm text-band-fg/85 underline underline-offset-4 hover:text-band-fg">{t('cta.orWrite')} {email}</a>
     </div>
   </div>
 </section>

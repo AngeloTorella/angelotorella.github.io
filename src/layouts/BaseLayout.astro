@@ -2,21 +2,29 @@
 import '../styles/global.css';
 import Header from '@components/layout/Header.astro';
 import Footer from '@components/layout/Footer.astro';
-import { publicFileExists } from '@lib/content';
+import { getProfile, publicFileExists } from '@lib/content';
+import { getLangFromUrl, langs, routePath, useTranslations, type Route } from '@/i18n/utils';
 
 interface Props {
   title: string;
   description?: string;
+  /** Page identity, used to link the equivalent page in each language. */
+  route: Route;
 }
-const { title, description = 'Desarrollo de software a medida, automatización y soporte de sistemas para empresas y profesionales.' } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const { title, description = t('meta.defaultDescription'), route } = Astro.props;
+const { title: profileTitle } = await getProfile(lang);
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const alternates = langs.map((code) => ({ code, href: new URL(routePath(route, code), Astro.site) }));
+const otherLangs = langs.filter((code) => code !== lang);
 // Only advertise a social image if one has been added to /public.
 const socialImage = publicFileExists('og-image.png') ? new URL('/og-image.png', Astro.site) : undefined;
 const fontsHref =
   'https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap';
 ---
 <!doctype html>
-<html lang="es">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -31,6 +39,8 @@ const fontsHref =
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
+    {alternates.map(alt => <link rel="alternate" hreflang={alt.code} href={alt.href} />)}
+    <link rel="alternate" hreflang="x-default" href={alternates[0].href} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
@@ -38,9 +48,10 @@ const fontsHref =
     {socialImage && <meta property="og:image" content={socialImage} />}
     {socialImage && <meta property="og:image:width" content="1200" />}
     {socialImage && <meta property="og:image:height" content="630" />}
-    {socialImage && <meta property="og:image:alt" content="Angelo Torella, Desarrollador de Software" />}
+    {socialImage && <meta property="og:image:alt" content={`Angelo Torella, ${profileTitle}`} />}
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="es_VE" />
+    <meta property="og:locale" content={t('meta.ogLocale')} />
+    {otherLangs.map(code => <meta property="og:locale:alternate" content={useTranslations(code)('meta.ogLocale')} />)}
     <meta name="twitter:card" content={socialImage ? 'summary_large_image' : 'summary'} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
@@ -57,17 +68,17 @@ const fontsHref =
       href="#main-content"
       class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-brand focus:px-4 focus:py-2 focus:text-on-brand"
     >
-      Saltar al contenido
+      {t('a11y.skipToContent')}
     </a>
-    <Header />
+    <Header route={route} />
     <main id="main-content"><slot /></main>
     <Footer />
-    <script is:inline>
+    <script is:inline define:vars={{ awayTitle: t('meta.awayTitle') }}>
       // Swap the tab title while the visitor is on another tab.
       (() => {
         const original = document.title;
         document.addEventListener('visibilitychange', () => {
-          document.title = document.hidden ? 'Tu software te espera' : original;
+          document.title = document.hidden ? awayTitle : original;
         });
       })();
     </script>

@@ -1,8 +1,11 @@
 ---
 import SocialLinks from '@components/ui/SocialLinks.astro';
 import { getProfile, getServices } from '@lib/content';
+import { getLangFromUrl, routePath, sectionPath, useTranslations } from '@/i18n/utils';
 
-const [{ name, title, email, location }, services] = await Promise.all([getProfile(), getServices()]);
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const [{ name, title, email, location }, services] = await Promise.all([getProfile(lang), getServices(lang)]);
 const linkClass = 'text-muted transition-colors hover:text-brand';
 ---
 <footer class="border-t border-line bg-sunken">
@@ -16,24 +19,24 @@ const linkClass = 'text-muted transition-colors hover:text-brand';
         <SocialLinks labels class="-ml-2 mt-3 flex-wrap" />
       </div>
 
-      <nav aria-label="Servicios">
-        <h2 class="mb-3 text-sm font-semibold uppercase tracking-wider text-ink">Servicios</h2>
+      <nav aria-label={t('footer.services')}>
+        <h2 class="mb-3 text-sm font-semibold uppercase tracking-wider text-ink">{t('footer.services')}</h2>
         <ul class="space-y-2 text-sm">
           {services.map(service => (
-            <li><a href={`/services/${service.id}`} class={linkClass}>{service.data.title}</a></li>
+            <li><a href={routePath({ name: 'service', slug: service.slug }, lang)} class={linkClass}>{service.data.title}</a></li>
           ))}
         </ul>
       </nav>
 
-      <nav aria-label="Más enlaces">
-        <h2 class="mb-3 text-sm font-semibold uppercase tracking-wider text-ink">Más</h2>
+      <nav aria-label={t('footer.moreNav')}>
+        <h2 class="mb-3 text-sm font-semibold uppercase tracking-wider text-ink">{t('footer.more')}</h2>
         <ul class="space-y-2 text-sm">
-          <li><a href="/#proceso" class={linkClass}>Cómo trabajo</a></li>
-          <li><a href="/contacto" class={linkClass}>Contacto</a></li>
+          <li><a href={sectionPath('proceso', lang)} class={linkClass}>{t('footer.process')}</a></li>
+          <li><a href={routePath({ name: 'contact' }, lang)} class={linkClass}>{t('footer.contact')}</a></li>
         </ul>
       </nav>
     </div>
 
-    <p class="mt-12 border-t border-line pt-6 text-sm text-muted">© {new Date().getFullYear()} {name}. Todos los derechos reservados.</p>
+    <p class="mt-12 border-t border-line pt-6 text-sm text-muted">© {new Date().getFullYear()} {name}. {t('footer.rights')}</p>
   </div>
 </footer>

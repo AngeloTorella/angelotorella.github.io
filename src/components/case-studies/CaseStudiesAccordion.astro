@@ -1,19 +1,22 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import Section from '@components/ui/Section.astro';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 
 interface Props {
   caseStudies: CollectionEntry<'caseStudies'>[];
   title?: string;
 }
-const { caseStudies, title = 'Casos reales' } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const { caseStudies, title = t('cases.defaultTitle') } = Astro.props;
 ---
 {caseStudies.length > 0 && (
   <Section id="casos" tone="sunken" labelledby="casos-title">
     <div class="mb-10 max-w-2xl">
-      <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-accent">Casos</p>
+      <p class="mb-3 text-sm font-semibold uppercase tracking-widest text-accent">{t('cases.eyebrow')}</p>
       <h2 id="casos-title" class="font-display text-3xl font-semibold leading-tight tracking-tight md:text-4xl">{title}</h2>
-      <p class="mt-4 text-lg text-muted">El reto, la solución y el resultado de cada proyecto.</p>
+      <p class="mt-4 text-lg text-muted">{t('cases.intro')}</p>
     </div>
     <div class="space-y-4">
       {caseStudies.map(({ data: study }) => (
@@ -27,13 +30,13 @@ const { caseStudies, title = 'Casos reales' } = Astro.props;
           </summary>
           <div class="mt-6 space-y-5 border-t border-line pt-6">
             {study.challenge && (
-              <div><h4 class="mb-1 font-semibold">Reto</h4><p class="text-muted">{study.challenge}</p></div>
+              <div><h4 class="mb-1 font-semibold">{t('cases.challenge')}</h4><p class="text-muted">{study.challenge}</p></div>
             )}
             {study.solution && (
-              <div><h4 class="mb-1 font-semibold">Solución</h4><p class="text-muted">{study.solution}</p></div>
+              <div><h4 class="mb-1 font-semibold">{t('cases.solution')}</h4><p class="text-muted">{study.solution}</p></div>
             )}
             {study.results && (
-              <div><h4 class="mb-1 font-semibold">Resultados</h4><p class="text-muted">{study.results}</p></div>
+              <div><h4 class="mb-1 font-semibold">{t('cases.results')}</h4><p class="text-muted">{study.results}</p></div>
             )}
             {study.stack.length > 0 && (
               <div class="flex flex-wrap gap-2">

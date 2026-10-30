@@ -1,11 +1,13 @@
 ---
-import type { CollectionEntry } from 'astro:content';
-import { getServiceTech } from '@lib/content';
+import { getServiceTech, type Service } from '@lib/content';
+import { getLangFromUrl, routePath, useTranslations } from '@/i18n/utils';
 
 interface Props {
-  service: CollectionEntry<'services'>;
+  service: Service;
   index: number;
 }
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 const { service, index } = Astro.props;
 const { title, tagline, icon, includes } = service.data;
 const techStack = await getServiceTech(service);
@@ -29,7 +31,7 @@ const iconPath = (icon && iconPaths[icon]) || fallbackPath;
   </div>
 
   <h3 class="font-display text-2xl font-semibold leading-snug tracking-tight">
-    <a href={`/services/${service.id}`} class="after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-offset-4">{title}</a>
+    <a href={routePath({ name: 'service', slug: service.slug }, lang)} class="after:absolute after:inset-0 after:rounded-2xl focus-visible:outline-offset-4">{title}</a>
   </h3>
   <p class="mt-3 text-muted">{tagline}</p>
 
@@ -53,7 +55,7 @@ const iconPath = (icon && iconPaths[icon]) || fallbackPath;
   )}
 
   <span class="mt-auto inline-flex items-center gap-1.5 pt-7 text-sm font-semibold text-brand">
-    Ver el servicio
+    {t('services.view')}
     <span aria-hidden="true" class="transition-transform duration-200 group-hover:translate-x-1">→</span>
   </span>
 </article>

@@ -1,9 +1,14 @@
 ---
 // Schema.org JSON-LD describing the person and the services offered, for search and AI engines.
 import { getProfile, getServices } from '@lib/content';
+import { getLangFromUrl, routePath, useTranslations } from '@/i18n/utils';
 
-const [profile, services] = await Promise.all([getProfile(), getServices()]);
-const site = Astro.site?.toString() ?? '/';
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const [profile, services] = await Promise.all([getProfile(lang), getServices(lang)]);
+const origin = Astro.site?.toString() ?? '/';
+// Home page of the current language.
+const site = new URL(routePath({ name: 'home' }, lang), origin).toString();
 const [city, country] = (profile.location ?? '').split(',').map((part) => part.trim());
 const sameAs = [profile.linkedin, profile.github].filter(Boolean);
 
@@ -14,7 +19,7 @@ const person = {
   jobTitle: profile.title,
   email: `mailto:${profile.email}`,
   url: site,
-  image: new URL('/icon-512.png', site).toString(),
+  image: new URL('/icon-512.png', origin).toString(),
   sameAs,
   ...(city && {
     address: { '@type': 'PostalAddress', addressLocality: city, addressCountry: country ?? city },
@@ -24,28 +29,29 @@ const person = {
 const business = {
   '@type': 'ProfessionalService',
   '@id': `${site}#business`,
-  name: `${profile.name} | Desarrollo de software`,
+  name: `${profile.name} | ${t('seo.businessSuffix')}`,
+  inLanguage: lang,
   description: profile.tagline,
   url: site,
   email: profile.email,
-  image: new URL('/og-image.png', site).toString(),
+  image: new URL('/og-image.png', origin).toString(),
   founder: { '@id': `${site}#person` },
   ...(city && { address: person.address }),
   areaServed: [
     ...(city ? [{ '@type': 'City', name: city }] : []),
     ...(country ? [{ '@type': 'Country', name: country }] : []),
-    'Remoto',
+    t('seo.remote'),
   ],
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
-    name: 'Servicios',
-    itemListElement: services.map(({ id, data }) => ({
+    name: t('seo.catalogName'),
+    itemListElement: services.map(({ slug, data }) => ({
       '@type': 'Offer',
       itemOffered: {
         '@type': 'Service',
         name: data.title,
         description: data.tagline,
-        url: new URL(`/services/${id}/`, site).toString(),
+        url: new URL(routePath({ name: 'service', slug }, lang), origin).toString(),
       },
     })),
   },

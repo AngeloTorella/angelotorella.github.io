@@ -2,23 +2,38 @@
 import Button from '@components/ui/Button.astro';
 import SocialLinks from '@components/ui/SocialLinks.astro';
 import { getProfile, getCaseStudies } from '@lib/content';
+import { getLangFromUrl, langs, routePath, sectionPath, useTranslations, type Route } from '@/i18n/utils';
 
-const [{ name }, caseStudies] = await Promise.all([getProfile(), getCaseStudies()]);
-const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+interface Props {
+  /** Page identity, used to link the equivalent page in the other language. */
+  route: Route;
+}
+const { route } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const [{ name }, caseStudies] = await Promise.all([getProfile(lang), getCaseStudies(lang)]);
 
 const links = [
-  { href: '/#servicios', label: 'Servicios', current: path.startsWith('/services') },
-  { href: '/#proceso', label: 'Cómo trabajo', current: false },
-  ...(caseStudies.length > 0 ? [{ href: '/#casos', label: 'Casos', current: false }] : []),
+  { href: sectionPath('servicios', lang), label: t('nav.services'), current: route.name === 'service' },
+  { href: sectionPath('proceso', lang), label: t('nav.process'), current: false },
+  ...(caseStudies.length > 0 ? [{ href: sectionPath('casos', lang), label: t('nav.cases'), current: false }] : []),
 ];
-const contactCurrent = path === '/contacto';
+const contactHref = routePath({ name: 'contact' }, lang);
+const contactCurrent = route.name === 'contact';
 const monogram = 'ATL';
+const switcher = langs.map((code) => ({
+  code,
+  label: code.toUpperCase(),
+  name: useTranslations(code)(`lang.${code}`),
+  href: routePath(route, code),
+  current: code === lang,
+}));
 
 const linkBase = 'rounded-md px-3 py-2 text-sm font-medium transition-colors hover:text-brand';
 ---
 <header class="sticky top-0 z-50 border-b border-line bg-paper/90 backdrop-blur supports-[backdrop-filter]:bg-paper/75">
-  <nav class="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8" aria-label="Principal">
-    <a href="/" class="flex items-center gap-2.5" aria-label={`${name}, inicio`}>
+  <nav class="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8" aria-label={t('nav.primary')}>
+    <a href={routePath({ name: 'home' }, lang)} class="flex items-center gap-2.5" aria-label={`${name}, ${t('nav.home')}`}>
       <span aria-hidden="true" class="flex h-10 w-10 items-center justify-center rounded-lg bg-brand font-display text-[0.8rem] font-semibold tracking-tight text-on-brand">{monogram}</span>
       <span class="font-display text-lg font-semibold tracking-tight">{name}</span>
     </a>
@@ -30,7 +45,23 @@ const linkBase = 'rounded-md px-3 py-2 text-sm font-medium transition-colors hov
         </a>
       ))}
       <SocialLinks class="ml-2" />
-      <Button href="/contacto" class={`ml-2 ${contactCurrent ? 'ring-2 ring-brand/40 ring-offset-2 ring-offset-paper' : ''}`}>Hablemos</Button>
+      <ul class="ml-2 flex items-center text-sm font-medium" aria-label={t('lang.label')}>
+        {switcher.map((item, i) => (
+          <li class="flex items-center">
+            {i > 0 && <span class="text-line" aria-hidden="true">|</span>}
+            <a
+              href={item.href}
+              hreflang={item.code}
+              lang={item.code}
+              title={item.name}
+              aria-label={item.name}
+              aria-current={item.current ? 'true' : undefined}
+              class={`rounded-md px-2 py-2 transition-colors hover:text-brand ${item.current ? 'text-brand' : 'text-muted'}`}
+            >{item.label}</a>
+          </li>
+        ))}
+      </ul>
+      <Button href={contactHref} class={`ml-2 ${contactCurrent ? 'ring-2 ring-brand/40 ring-offset-2 ring-offset-paper' : ''}`}>{t('nav.contactShort')}</Button>
     </div>
 
     <button
@@ -39,7 +70,9 @@ const linkBase = 'rounded-md px-3 py-2 text-sm font-medium transition-colors hov
       class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-line text-ink md:hidden"
       aria-expanded="false"
       aria-controls="mobile-menu"
-      aria-label="Abrir menú"
+      aria-label={t('nav.openMenu')}
+      data-open-label={t('nav.openMenu')}
+      data-close-label={t('nav.closeMenu')}
     >
       <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24" aria-hidden="true">
         <path id="icon-open" d="M4 7h16M4 12h16M4 17h16" />
@@ -56,7 +89,23 @@ const linkBase = 'rounded-md px-3 py-2 text-sm font-medium transition-colors hov
         </a>
       ))}
       <SocialLinks labels class="mt-1" />
-      <Button href="/contacto" size="lg" class="mt-2 w-full">Hablemos de tu proyecto</Button>
+      <ul class="mt-1 flex items-center px-1 text-base font-medium" aria-label={t('lang.label')}>
+        {switcher.map((item, i) => (
+          <li class="flex items-center">
+            {i > 0 && <span class="text-line" aria-hidden="true">|</span>}
+            <a
+              href={item.href}
+              hreflang={item.code}
+              lang={item.code}
+              title={item.name}
+              aria-label={item.name}
+              aria-current={item.current ? 'true' : undefined}
+              class={`rounded-lg px-3 py-3 ${item.current ? 'text-brand' : 'text-ink'}`}
+            >{item.label}</a>
+          </li>
+        ))}
+      </ul>
+      <Button href={contactHref} size="lg" class="mt-2 w-full">{t('nav.contactLong')}</Button>
     </div>
   </div>
 </header>
@@ -74,7 +123,7 @@ const linkBase = 'rounded-md px-3 py-2 text-sm font-medium transition-colors hov
       iconOpen.classList.toggle('hidden', open);
       iconClose.classList.toggle('hidden', !open);
       toggle.setAttribute('aria-expanded', String(open));
-      toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+      toggle.setAttribute('aria-label', toggle.getAttribute(open ? 'data-close-label' : 'data-open-label'));
     }
 
     toggle.addEventListener('click', function () {

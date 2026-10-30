@@ -1,0 +1,122 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Section from '@components/ui/Section.astro';
+import Button from '@components/ui/Button.astro';
+import CaseStudiesAccordion from '@components/case-studies/CaseStudiesAccordion.astro';
+import CTASection from '@components/layout/CTASection.astro';
+import { getProfile, getServices, getServiceTech, getCaseStudies, type Service } from '@lib/content';
+import { contactPath, getLangFromUrl, routePath, sectionPath, useTranslations } from '@/i18n/utils';
+
+interface Props {
+  service: Service;
+}
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const { service } = Astro.props;
+const [{ name }, techStack, caseStudies, allServices, { Content }] = await Promise.all([
+  getProfile(lang),
+  getServiceTech(service),
+  getCaseStudies(lang, service.slug),
+  getServices(lang),
+  render(service),
+]);
+const { title, tagline, ctaText, priceLabel, includes, deliverables } = service.data;
+const others = allServices.filter(s => s.slug !== service.slug);
+const check = 'M5 13l4 4L19 7';
+const h2 = 'font-display text-2xl font-semibold tracking-tight';
+---
+<BaseLayout title={`${title} | ${name}`} description={tagline} route={{ name: 'service', slug: service.slug }}>
+  <Section class="pb-10 md:pb-14" labelledby="service-title">
+    <nav aria-label={t('service.breadcrumb')} class="mb-8 text-sm text-muted">
+      <a href={sectionPath('servicios', lang)} class="underline-offset-4 hover:text-brand hover:underline">{t('nav.services')}</a>
+      <span aria-hidden="true"> / </span>
+      <span aria-current="page">{title}</span>
+    </nav>
+    <header class="max-w-3xl">
+      <h1 id="service-title" class="font-display text-4xl font-semibold leading-tight tracking-tight md:text-5xl">{title}</h1>
+      <p class="mt-5 text-xl text-muted">{tagline}</p>
+      {priceLabel && <p class="mt-4 inline-block rounded-full bg-brand-soft px-3 py-1 text-sm font-medium text-brand">{priceLabel}</p>}
+    </header>
+
+    <div class="mt-14 grid gap-12 lg:grid-cols-[1.6fr_1fr] lg:gap-16">
+      <div class="space-y-12">
+        <div class="prose-lite max-w-none text-lg text-muted">
+          <Content />
+        </div>
+
+        {includes.length > 0 && (
+          <section aria-labelledby="includes-title">
+            <h2 id="includes-title" class={h2}>{t('service.includes')}</h2>
+            <ul class="mt-5 space-y-3">
+              {includes.map(item => (
+                <li class="flex items-start gap-3">
+                  <svg class="mt-1 h-5 w-5 shrink-0 text-brand" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d={check} /></svg>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {deliverables.length > 0 && (
+          <section aria-labelledby="deliverables-title" class="rounded-2xl border border-line bg-sunken p-6 sm:p-8">
+            <h2 id="deliverables-title" class={h2}>{t('service.deliverables')}</h2>
+            <ul class="mt-5 space-y-3">
+              {deliverables.map(item => (
+                <li class="flex items-start gap-3">
+                  <span class="mt-2.5 h-1.5 w-4 shrink-0 rounded-full bg-accent" aria-hidden="true"></span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {techStack.length > 0 && (
+          <section aria-labelledby="stack-title">
+            <h2 id="stack-title" class={h2}>{t('service.tech')}</h2>
+            <div class="mt-4 flex flex-wrap gap-2">
+              {techStack.map(tech => (
+                <span class="rounded-full bg-brand-soft px-3 py-1 text-sm font-medium text-brand">{tech.data.name}</span>
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
+
+      <aside class="lg:sticky lg:top-24 lg:self-start">
+        <div class="rounded-2xl border border-line bg-surface p-6 shadow-lift">
+          <h2 class="font-display text-xl font-semibold">{t('service.startTitle')}</h2>
+          <ol class="mt-4 space-y-3 text-muted">
+            <li class="flex gap-3"><span class="font-semibold text-brand">1.</span> {t('service.start1')}</li>
+            <li class="flex gap-3"><span class="font-semibold text-brand">2.</span> {t('service.start2')}</li>
+            <li class="flex gap-3"><span class="font-semibold text-brand">3.</span> {t('service.start3')}</li>
+            <li class="flex gap-3"><span class="font-semibold text-brand">4.</span> {t('service.start4')}</li>
+          </ol>
+          <Button href={contactPath(lang, service.slug)} size="lg" class="mt-6 w-full" arrow>{ctaText}</Button>
+        </div>
+      </aside>
+    </div>
+  </Section>
+
+  <CaseStudiesAccordion caseStudies={caseStudies} title={t('cases.serviceTitle')} />
+
+  {others.length > 0 && (
+    <Section tone="sunken" class="py-14 md:py-16" labelledby="others-title">
+      <h2 id="others-title" class="font-display text-2xl font-semibold tracking-tight">{t('service.others')}</h2>
+      <ul class="mt-6 grid gap-4 sm:grid-cols-2">
+        {others.map(s => (
+          <li>
+            <a href={routePath({ name: 'service', slug: s.slug }, lang)} class="group block rounded-2xl border border-line bg-surface p-5 shadow-card transition-all hover:-translate-y-0.5 hover:border-brand/50 hover:shadow-lift">
+              <span class="font-display text-lg font-semibold group-hover:text-brand">{s.data.title}</span>
+              <span class="mt-1 block text-sm text-muted">{s.data.tagline}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </Section>
+  )}
+
+  <CTASection />
+</BaseLayout>

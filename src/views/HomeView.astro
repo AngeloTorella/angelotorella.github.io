@@ -1,0 +1,26 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Hero from '@components/home/Hero.astro';
+import WhyMe from '@components/home/WhyMe.astro';
+import Process from '@components/home/Process.astro';
+import ServiceGrid from '@components/services/ServiceGrid.astro';
+import CaseStudiesAccordion from '@components/case-studies/CaseStudiesAccordion.astro';
+import CTASection from '@components/layout/CTASection.astro';
+import StructuredData from '@components/seo/StructuredData.astro';
+import { getProfile, getCaseStudies } from '@lib/content';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const [{ name, tagline }, caseStudies] = await Promise.all([getProfile(lang), getCaseStudies(lang)]);
+---
+<BaseLayout title={`${name} | ${t('meta.homeTitleSuffix')}`} description={tagline} route={{ name: 'home' }}>
+  <StructuredData slot="head" />
+  <Hero />
+  <ServiceGrid />
+  <WhyMe />
+  <Process />
+  <!-- Renders nothing while there are no public case studies. -->
+  <CaseStudiesAccordion caseStudies={caseStudies.slice(0, 3)} title={t('cases.recentTitle')} />
+  <CTASection />
+</BaseLayout>
