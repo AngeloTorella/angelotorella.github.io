@@ -1,0 +1,74 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Button from '@components/ui/Button.astro';
+import { routePath } from '@/i18n/utils';
+
+// GitHub Pages serves a single 404.html for every unknown URL, so the language is picked in the
+// browser from the requested path ("/en/..." is English, anything else is Spanish).
+const copy = {
+  es: {
+    title: 'Página no encontrada',
+    text: 'La página no existe o fue movida.',
+    button: 'Volver al inicio',
+    href: routePath({ name: 'home' }, 'es'),
+  },
+  en: {
+    title: 'Page not found',
+    text: 'The page does not exist or has been moved.',
+    button: 'Back to home',
+    href: routePath({ name: 'home' }, 'en'),
+  },
+} as const;
+---
+<BaseLayout
+  title="404 | Angelo Torella"
+  description="Página no encontrada / Page not found"
+  route={{ name: 'home' }}
+>
+  <meta slot="head" name="robots" content="noindex" />
+  <script slot="head" is:inline>
+    // Runs before first paint so the wrong language never flashes.
+    (function () {
+      var en = location.pathname === '/en' || location.pathname.indexOf('/en/') === 0;
+      document.documentElement.setAttribute('data-nf', en ? 'en' : 'es');
+      document.documentElement.lang = en ? 'en' : 'es';
+    })();
+  </script>
+
+  <!-- Fills the window below the 4rem header; the footer sits just below the fold. -->
+  <section
+    class="flex min-h-[calc(100svh-4rem)] items-center bg-paper py-12"
+    aria-labelledby="notfound-title"
+  >
+    <div class="mx-auto w-full max-w-6xl px-5 text-center sm:px-8">
+      <p
+        class="text-center font-display text-[length:clamp(5rem,min(24vw,calc(100svh_-_24rem)),16rem)] font-semibold leading-none tracking-tight text-brand"
+        aria-hidden="true"
+      >
+        404
+      </p>
+
+      {(['es', 'en'] as const).map((l) => (
+        <div data-l={l} lang={l}>
+          <h1
+            id={`notfound-title-${l}`}
+            class="mt-2 text-center font-display text-4xl font-semibold leading-tight tracking-tight md:text-6xl"
+          >
+            {copy[l].title}
+          </h1>
+          <p class="mx-auto mt-4 max-w-xl text-lg text-muted md:text-xl">{copy[l].text}</p>
+          <div class="mt-10 flex justify-center">
+            <Button href={copy[l].href} size="lg" arrow>{copy[l].button}</Button>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style is:global>
+  html:not([data-nf='en']) [data-l='en'],
+  html[data-nf='en'] [data-l='es'] {
+    display: none;
+  }
+</style>
