@@ -1,5 +1,5 @@
 ---
-import { getServiceTech, type Service } from '@lib/content';
+import { getServiceTech, pick, type Service } from '@lib/content';
 import { getLangFromUrl, routePath, useTranslations } from '@/i18n/utils';
 
 interface Props {
@@ -49,7 +49,7 @@ const iconPath = (icon && iconPaths[icon]) || fallbackPath;
   {techStack.length > 0 && (
     <div class="mt-5 flex flex-wrap gap-2">
       {techStack.slice(0, 4).map(tech => (
-        <span class="rounded-full bg-brand-soft px-2.5 py-0.5 text-xs font-medium text-brand">{tech.data.name}</span>
+        <span class="rounded-full bg-brand-soft px-2.5 py-0.5 text-xs font-medium text-brand">{pick(tech.data.name, lang)}</span>
       ))}
     </div>
   )}

@@ -2,12 +2,20 @@
   "main": {
     "name": "Angelo Torella",
     "title": {
-      "es": "Desarrollador de Software",
-      "en": "Software Developer"
+      "es": "Desarrollador Full-Stack",
+      "en": "Full-Stack Developer"
+    },
+    "cvTitle": {
+      "es": "Desarrollador Full-Stack | Datos y BI | Automatización | Ingeniería Informática",
+      "en": "Full-Stack Developer | Data & BI | Automation | Computer Science"
     },
     "headline": {
       "es": "Software a medida para tu negocio o práctica profesional.",
       "en": "Custom software for your business or professional practice."
+    },
+    "cvSummary": {
+      "es": "Desarrollador full-stack con formación en Ingeniería Informática (UCAB), con defensa de tesis prevista antes de finalizar 2026. Construyo aplicaciones web con React o Vue en el frontend y Python en el backend. En datos, diseño arquitecturas de bases de datos y modelos de data warehousing, y desarrollo soluciones de BI para presentar la información.\n\nActualmente trabajo en SmartClimbs, una consultoría de negocios, y en un área contable. En SmartClimbs desarrollo mi tesis, una solución de BI para pymes, y una página de pagos en línea conectada a un banco. En el área contable construyo herramientas para el equipo y sus clientes: un sistema de validación de facturas con Google Forms y Sheets, y una solución de facturación con Vue y Python. Como freelance, desarrollo landing pages y un asistente de agendamiento por WhatsApp.\n\nUso la IA como herramienta de desarrollo y acompaño a áreas no técnicas en su adopción, con buenas prácticas y foco en seguridad.",
+      "en": "Full-stack developer with a Computer Science background (UCAB), with a thesis defense expected before the end of 2026. I build web applications with React or Vue on the frontend and Python on the backend. On the data side, I design database architectures and data warehouse models, and build BI solutions to present the information.\n\nI currently work at SmartClimbs, a business consultancy, and in an accounting department. At SmartClimbs I develop my thesis, a BI solution for SMEs, and an online payment page connected to a bank. In the accounting department I build tools for the team and its clients: an invoice validation system with Google Forms and Sheets, and an invoicing solution with Vue and Python. As a freelancer, I build landing pages and a WhatsApp scheduling assistant.\n\nI use AI as a development tool and guide non-technical areas in adopting it, with best practices and a focus on security."
     },
     "tagline": {
       "es": "Diseño y desarrollo aplicaciones web, automatizaciones y sistemas que encajan con la forma real de trabajar de tu equipo, con comunicación directa y entregas claras.",
@@ -23,9 +31,87 @@
     "github": "https://github.com/AngeloTorella",
     "twitter": "",
     "calendarUrl": "",
-    "education": [],
+    "education": [
+      {
+        "es": "Ingeniería Informática · Universidad Católica Andrés Bello (UCAB) · 2019 – defensa de tesis prevista antes de finalizar 2026 y acto de grado hacia marzo de 2027",
+        "en": "Computer Science (Ingeniería Informática) · Universidad Católica Andrés Bello (UCAB) · 2019 – thesis defense expected before the end of 2026, graduation ceremony around March 2027"
+      }
+    ],
     "languages": [],
-    "certifications": [],
-    "_todo": "Owner to provide: location, LinkedIn URL, calendarUrl, education, languages, certifications (name/issuer/year), avatarUrl (file in /public)."
+    "certifications": [
+      {
+        "name": {
+          "es": "MOC DP-600 Microsoft Fabric",
+          "en": "MOC DP-600 Microsoft Fabric"
+        },
+        "issuer": "Lourtec",
+        "year": "2025"
+      },
+      {
+        "name": {
+          "es": "Bootcamp Microsoft Power BI",
+          "en": "Microsoft Power BI Bootcamp"
+        },
+        "issuer": "SmartClimbs",
+        "year": "2024"
+      },
+      {
+        "name": {
+          "es": "Fundamentos de ETL con Python y Pentaho",
+          "en": "ETL Fundamentals with Python and Pentaho"
+        },
+        "issuer": "Platzi",
+        "year": "2024"
+      },
+      {
+        "name": {
+          "es": "Data Warehousing y Modelado OLAP",
+          "en": "Data Warehousing and OLAP Modeling"
+        },
+        "issuer": "Platzi",
+        "year": "2024"
+      },
+      {
+        "name": {
+          "es": "Data Fundamentals",
+          "en": "Data Fundamentals"
+        },
+        "issuer": "IBM SkillsBuild",
+        "year": "2024"
+      },
+      {
+        "name": {
+          "es": "Bases de Datos con SQL",
+          "en": "SQL Databases"
+        },
+        "issuer": "Platzi",
+        "year": "2024"
+      },
+      {
+        "name": {
+          "es": "Docker: Fundamentos",
+          "en": "Docker: Fundamentals"
+        },
+        "issuer": "Platzi",
+        "year": "2024"
+      },
+      {
+        "name": {
+          "es": "Profesional de Git y GitHub",
+          "en": "Git and GitHub Professional"
+        },
+        "issuer": "Platzi",
+        "year": "2023"
+      },
+      {
+        "name": {
+          "es": "Patrones de Diseño con Java",
+          "en": "Design Patterns with Java"
+        },
+        "issuer": "Código Facilito",
+        "year": "2023"
+      }
+    ],
+    "_todo": "Owner to provide: calendarUrl, languages, avatarUrl (file in /public). CV certifications are intentionally limited to the essentials; the full list of 13 lives on LinkedIn (omitted: 3 AWS Educate intro badges, Platzi Introduction to Software Design Patterns)."
   }
 }

@@ -1,20 +1,224 @@
 [
   {
-    "id": "software-development",
-    "role": "Desarrollador de Software",
-    "type": "full-time",
-    "isVisibleInCv": false,
+    "id": "freelance-projects",
+    "role": {
+      "es": "Desarrollador freelance",
+      "en": "Freelance Developer"
+    },
+    "duration": {
+      "es": "Proyectos puntuales",
+      "en": "Project-based"
+    },
+    "type": "freelance",
+    "description": {
+      "es": "Proyectos puntuales por encargo, trabajando de forma directa con cada cliente.",
+      "en": "One-off client projects, working directly with each client."
+    },
+    "highlights": [
+      {
+        "es": "Landing pages para clientes, desarrolladas con React.",
+        "en": "Landing pages for clients, built with React."
+      },
+      {
+        "es": "Asistente de agendamiento por WhatsApp con n8n: primera fase de calificación de interesados y agendamiento inmediato de reuniones. El cliente lo aprobó tras las pruebas y quedó a cargo del despliegue a producción.",
+        "en": "WhatsApp scheduling assistant built with n8n: first-stage prospect qualification and immediate meeting booking. The client approved it after testing and took over the production deployment."
+      }
+    ],
+    "stack": [
+      "React",
+      "Vite",
+      "Tailwind CSS",
+      "n8n",
+      "WhatsApp Cloud API"
+    ],
+    "isVisibleInCv": true,
+    "order": 4,
+    "_todo": "Optional: add approximate year(s) for the freelance work."
+  },
+  {
+    "id": "thesis-sambi-solution",
+    "section": "education",
+    "role": {
+      "es": "Tesis: Desarrollo de un SaaS de inteligencia de negocios aplicado al marketing de pymes",
+      "en": "Thesis: Development of a business intelligence SaaS applied to SME marketing"
+    },
+    "company": {
+      "es": "En conjunto con SmartClimbs",
+      "en": "In collaboration with SmartClimbs"
+    },
+    "duration": {
+      "es": "En desarrollo",
+      "en": "In progress"
+    },
+    "type": "thesis",
+    "description": {
+      "es": "Diseño y desarrollo de una solución de BI para pequeñas y medianas empresas, pensado de punta a punta: desarrollo, arquitectura, gestión de costos y optimización.",
+      "en": "Design and development of a BI solution for small and medium-sized businesses, conceived end to end: development, architecture, cost management and optimization."
+    },
+    "highlights": [
+      {
+        "es": "Extracción de datos de campañas desde Meta Marketing API, Google Ads API y LinkedIn Marketing API.",
+        "en": "Extraction of campaign data from the Meta Marketing API, Google Ads API and LinkedIn Marketing API."
+      },
+      {
+        "es": "Tableros de Power BI Embedded integrados dentro de la aplicación.",
+        "en": "Power BI Embedded dashboards integrated into the application."
+      },
+      {
+        "es": "IA integrada en la propia solución para el análisis de los datos de marketing.",
+        "en": "AI built into the solution itself for analyzing marketing data."
+      }
+    ],
+    "stack": [
+      "Python",
+      "React",
+      "Vite",
+      "Power BI Embedded",
+      "Google Cloud",
+      "Meta Marketing API",
+      "Google Ads API",
+      "LinkedIn Marketing API"
+    ],
+    "isVisibleInCv": true,
     "order": 1,
-    "_todo": "Hidden until the owner provides company/«Freelance», start date, description, highlights and stack. Then set isVisibleInCv to true."
+    "_todo": "Add the database engine to the stack once confirmed."
+  },
+  {
+    "id": "smartclimbs-internship",
+    "role": {
+      "es": "Pasante – Data Warehouse y Automatizaciones",
+      "en": "Intern – Data Warehouse and Automation"
+    },
+    "company": {
+      "es": "SmartClimbs, Consultoría de negocios",
+      "en": "SmartClimbs, Business Consulting"
+    },
+    "location": {
+      "es": "Caracas, Venezuela (remoto)",
+      "en": "Caracas, Venezuela (remote)"
+    },
+    "startDate": "2025-01",
+    "type": "internship",
+    "description": {
+      "es": "Pasantía en la que desarrollo mi tesis de grado y apoyo a la empresa con datos, automatizaciones e IA.",
+      "en": "Internship in which I develop my degree thesis and support the company with data, automation and AI."
+    },
+    "highlights": [
+      {
+        "es": "Desarrollo de la solución de BI de mi tesis como producto para la empresa.",
+        "en": "Development of my thesis' BI solution as a product for the company."
+      },
+      {
+        "es": "Página de pagos en línea de cursos conectada directamente con un banco nacional, eliminando el procesamiento manual de los pagos.",
+        "en": "Online course payment page connected directly to a national bank, eliminating manual payment processing."
+      }
+    ],
+    "stack": [
+      "Python",
+      "React",
+      "Vite",
+      "Microsoft Fabric"
+    ],
+    "isVisibleInCv": true,
+    "order": 2,
+    "_todo": "Confirm whether Microsoft Fabric belongs here."
   },
   {
     "id": "accounting-it-support",
-    "role": "Asistencia informática para áreas contables",
+    "role": {
+      "es": "Desarrollador de software y soporte TI – Área contable",
+      "en": "Software Developer & IT Support – Accounting Department"
+    },
     "startDate": "2019",
     "type": "full-time",
-    "description": "Asistencia informática a equipos contables: resolución de incidencias, apoyo en el uso de herramientas y acompañamiento técnico.",
+    "description": {
+      "es": "En paralelo a mis estudios, trabajo dentro de un área contable aportando desde la tecnología: desarrollo herramientas para el equipo y sus clientes, automatizo procesos y doy apoyo técnico.",
+      "en": "Alongside my studies, I work within an accounting department contributing through technology: I build tools for the team and its clients, automate processes and provide technical support."
+    },
+    "highlights": [
+      {
+        "es": "Sistema de carga de facturas para clientes con Google Forms y Google Sheets, sin necesidad de servidores. Los clientes registran sus facturas al día, como exige la normativa, y la hoja consolida los totales y valida automáticamente el IVA, la continuidad de la numeración y otros errores, dejando los datos en el formato requerido para presentar la declaración.",
+        "en": "Invoice submission system for clients built with Google Forms and Google Sheets, with no servers required. Clients log their invoices on time, as regulations require, and the sheet consolidates totals and automatically validates VAT, numbering continuity and other errors, leaving the data in the format required to file the tax return."
+      },
+      {
+        "es": "Solución de facturación (fase 1) con Vue y Python, enfocada en el seguimiento de facturas y la generación de facturas recurrentes. Permite llevar los números de control, dar mejor seguimiento a cada factura e imprimirla en forma libre sobre talonarios fiscales.",
+        "en": "Invoicing solution (phase 1) built with Vue and Python, focused on invoice tracking and recurring invoice generation. It manages control numbers, gives better follow-up on each invoice and supports free-form printing onto fiscal invoice books."
+      },
+      {
+        "es": "Apoyo puntual en la configuración de aplicaciones y equipos del área.",
+        "en": "Ad hoc support configuring the department's applications and equipment."
+      }
+    ],
+    "stack": [
+      "Google Forms",
+      "Google Sheets",
+      "Vue",
+      "Python"
+    ],
     "isVisibleInCv": true,
-    "order": 2,
-    "_todo": "Optional: add company, exact start/end dates (YYYY-MM), highlights and stack. Currently shown as 2019 – Actualidad."
+    "order": 3,
+    "_todo": "Optional: add company and exact start date (YYYY-MM)."
+  },
+  {
+    "id": "applied-ai",
+    "section": "ai",
+    "role": {
+      "es": "Desarrollo asistido por IA y asesoramiento",
+      "en": "AI-Assisted Development and Advisory"
+    },
+    "type": "practice",
+    "description": {
+      "es": "Uso de modelos de IA y asistentes de código para acelerar el desarrollo, prototipar y automatizar procesos.",
+      "en": "Use of AI models and coding assistants to speed up development, prototype and automate processes."
+    },
+    "highlights": [
+      {
+        "es": "Prototipado de MVPs y herramientas internas apoyado en asistentes de código y modelos de IA.",
+        "en": "Prototyping of MVPs and internal tools supported by coding assistants and AI models."
+      },
+      {
+        "es": "Acompañamiento a áreas fuera de TI en el uso de la IA, con buenas prácticas y foco en seguridad, para que arranquen sus propios proyectos sin depender de TI.",
+        "en": "Guidance for non-IT areas on using AI, with best practices and a focus on security, so they can start their own projects without depending on IT."
+      },
+      {
+        "es": "Asesoramiento a personas en el desarrollo de soluciones con IA.",
+        "en": "Advising people on developing AI-powered solutions."
+      }
+    ],
+    "stack": [
+      "Claude",
+      "Codex",
+      "Gemini"
+    ],
+    "isVisibleInCv": true,
+    "order": 6
+  },
+  {
+    "id": "local-ai-optimization-tool",
+    "section": "projects",
+    "role": {
+      "es": "Herramienta de optimización de recursos con IA local",
+      "en": "Resource Optimization Tool with Local AI"
+    },
+    "type": "side-project",
+    "description": {
+      "es": "Aplicación local que modela escenarios en un entorno simulado y calcula fórmulas de optimización de recursos, como reemplazo de las planillas de Excel.",
+      "en": "Local application that models scenarios in a simulated environment and computes resource optimization formulas, as a replacement for Excel spreadsheets."
+    },
+    "highlights": [
+      {
+        "es": "Desarrollada con LLMs corriendo en equipos Linux de pocos recursos, para depender menos de suscripciones y trabajar con los modelos en el mismo equipo de desarrollo.",
+        "en": "Built with LLMs running on low-resource Linux machines, to depend less on subscriptions and work with the models on the development machine itself."
+      }
+    ],
+    "stack": [
+      "Linux",
+      {
+        "es": "LLMs locales",
+        "en": "Local LLMs"
+      }
+    ],
+    "isVisibleInCv": true,
+    "order": 5
   }
 ]

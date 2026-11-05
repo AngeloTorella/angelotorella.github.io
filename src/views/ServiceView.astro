@@ -5,7 +5,7 @@ import Section from '@components/ui/Section.astro';
 import Button from '@components/ui/Button.astro';
 import CaseStudiesAccordion from '@components/case-studies/CaseStudiesAccordion.astro';
 import CTASection from '@components/layout/CTASection.astro';
-import { getProfile, getServices, getServiceTech, getCaseStudies, type Service } from '@lib/content';
+import { getProfile, getServices, getServiceTech, getCaseStudies, pick, type Service } from '@lib/content';
 import { contactPath, getLangFromUrl, routePath, sectionPath, useTranslations } from '@/i18n/utils';
 
 interface Props {
@@ -78,7 +78,7 @@ const h2 = 'font-display text-2xl font-semibold tracking-tight';
             <h2 id="stack-title" class={h2}>{t('service.tech')}</h2>
             <div class="mt-4 flex flex-wrap gap-2">
               {techStack.map(tech => (
-                <span class="rounded-full bg-brand-soft px-3 py-1 text-sm font-medium text-brand">{tech.data.name}</span>
+                <span class="rounded-full bg-brand-soft px-3 py-1 text-sm font-medium text-brand">{pick(tech.data.name, lang)}</span>
               ))}
             </div>
           </section>

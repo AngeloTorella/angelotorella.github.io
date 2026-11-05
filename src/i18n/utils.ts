@@ -13,17 +13,19 @@ export function useTranslations(lang: Lang) {
 }
 
 /** Pages that exist in every language, with a localized path for each. */
-export type Route = { name: 'home' } | { name: 'contact' } | { name: 'service'; slug: string };
+export type Route = { name: 'home' } | { name: 'contact' } | { name: 'cv' } | { name: 'service'; slug: string };
 
 const routePaths = {
   home: { es: '/', en: '/en/' },
   contact: { es: '/contacto/', en: '/en/contact/' },
+  cv: { es: '/cv/', en: '/en/cv/' },
   servicesPrefix: { es: '/services/', en: '/en/services/' },
 } as const;
 
 export function routePath(route: Route, lang: Lang): string {
   if (route.name === 'home') return routePaths.home[lang];
   if (route.name === 'contact') return routePaths.contact[lang];
+  if (route.name === 'cv') return routePaths.cv[lang];
   return `${routePaths.servicesPrefix[lang]}${route.slug}/`;
 }
 

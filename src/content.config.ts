@@ -7,12 +7,18 @@ const optionalUrl = z.union([z.literal(''), z.url()]).default('');
 
 // Text that changes with the site language.
 const localized = z.object({ es: z.string(), en: z.string() });
+// Text that is the same in every language (a tech name) or translated.
+const maybeLocalized = z.union([z.string(), localized]);
 
 const profile = defineCollection({
   loader: file('src/content/profile.json'),
   schema: z.object({
     name: z.string(),
     title: localized,
+    // Longer professional line shown under the name on the CV. Falls back to `title`.
+    cvTitle: localized.optional(),
+    // Hiring-oriented summary for the CV. Paragraphs separated by a blank line. Falls back to `bio`.
+    cvSummary: localized.optional(),
     tagline: localized,
     // Hero headline (H1) on the home page. Falls back to `title` when not set.
     headline: localized.optional(),
@@ -25,11 +31,11 @@ const profile = defineCollection({
     github: optionalUrl,
     twitter: optionalUrl,
     calendarUrl: optionalUrl,
-    education: z.array(z.string()).default([]),
+    education: z.array(localized).default([]),
     languages: z.array(z.object({ name: z.string(), level: z.string() })).default([]),
     // Shown only on the CV page; hidden when empty.
     certifications: z
-      .array(z.object({ name: z.string(), issuer: z.string().optional(), year: z.string().optional() }))
+      .array(z.object({ name: localized, issuer: z.string().optional(), year: z.string().optional() }))
       .default([]),
   }),
 });
@@ -37,8 +43,8 @@ const profile = defineCollection({
 const techStack = defineCollection({
   loader: file('src/content/tech-stack.json'),
   schema: z.object({
-    name: z.string(),
-    category: z.string(),
+    name: maybeLocalized,
+    category: localized,
     color: z.string().optional(),
     order: z.number().default(0),
   }),
@@ -85,18 +91,20 @@ const experience = defineCollection({
   loader: file('src/content/experience.json'),
   schema: z.object({
     // Unknown facts stay unset: the CV page hides whatever is missing.
-    company: z.string().optional(),
-    role: z.string(),
+    company: localized.optional(),
+    role: localized,
     // "YYYY-MM" is formatted as a date; any other string is shown as-is.
     startDate: z.string().optional(),
     endDate: z.string().optional(),
     // Free-text span (e.g. "Desde 2019"), shown when exact dates are unknown.
-    duration: z.string().optional(),
-    location: z.string().optional(),
-    type: z.enum(['full-time', 'contract', 'freelance', 'side-project']).default('full-time'),
-    description: z.string().optional(),
-    highlights: z.array(z.string()).default([]),
-    stack: z.array(z.string()).default([]),
+    duration: localized.optional(),
+    location: localized.optional(),
+    type: z.enum(['full-time', 'contract', 'freelance', 'side-project', 'thesis', 'internship', 'practice']).default('full-time'),
+    // CV section the entry is rendered in.
+    section: z.enum(['education', 'experience', 'ai', 'projects']).default('experience'),
+    description: localized.optional(),
+    highlights: z.array(localized).default([]),
+    stack: z.array(maybeLocalized).default([]),
     isVisibleInCv: z.boolean().default(true),
     order: z.number().default(0),
   }),
